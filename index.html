@@ -3,179 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pharma Hub | Life Line Medical</title>
+    <title>E-pharm-MSD | Medicine Safe Delivery Erode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { background: #010409; color: #e6edf3; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .bg-vibrant { 
-            background: radial-gradient(circle at 100% 0%, #002d4d 0%, transparent 50%);
-            background-color: #010409;
-        }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 2rem; 
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .glass-card:hover { 
-            border-color: #00d2ff; 
-            background: rgba(0, 210, 255, 0.03); 
-            transform: translateY(-8px);
-        }
-        .upload-gradient {
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.15) 0%, rgba(58, 123, 213, 0.1) 100%);
-            border: 2px dashed rgba(0, 210, 255, 0.4);
-        }
-        .btn-glow {
-            background: #00d2ff;
-            color: #010409;
-            font-weight: 800;
-            transition: 0.3s;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-        }
-        .btn-glow:hover {
-            background: white;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.5);
-            transform: scale(1.02);
-        }
+        body { background: #05070a; color: #e6edf3; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .bg-msd { background: radial-gradient(circle at 100% 0%, #064e3b 0%, transparent 40%), #05070a; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 2.5rem; }
+        .step-hidden { display: none; }
+        .scanner-line { height: 2px; width: 100%; background: #10b981; position: absolute; animation: scanAnim 2s linear infinite; box-shadow: 0 0 15px #10b981; }
+        @keyframes scanAnim { 0% { top: 0%; } 100% { top: 100%; } }
+        .btn-msd { background: #10b981; color: #05070a; font-weight: 800; transition: 0.3s; }
+        .btn-msd:hover { background: #ffffff; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2); }
     </style>
 </head>
-<body class="bg-vibrant min-h-screen">
+<body class="bg-msd min-h-screen">
 
-    <nav class="max-w-7xl mx-auto flex justify-between items-center p-6 sticky top-0 bg-[#010409]/90 backdrop-blur-md z-50 border-b border-white/5">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#00d2ff] rounded-xl flex items-center justify-center font-black text-black text-xl shadow-lg shadow-[#00d2ff]/20">P</div>
+    <nav class="max-w-5xl mx-auto flex justify-between items-center p-8 sticky top-0 bg-black/40 backdrop-blur-xl z-50 border-b border-white/5">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-[#10b981] rounded-2xl flex items-center justify-center font-black text-black text-xl">MSD</div>
             <div class="flex flex-col">
-                <span class="text-xs font-bold tracking-[0.3em] uppercase">Pharma Hub</span>
-                <span class="text-[8px] text-gray-500 uppercase tracking-widest font-bold">Life Line Medical Coimbatore</span>
+                <span class="text-xs font-black tracking-widest text-white uppercase">E-pharm-MSD</span>
+                <span class="text-[8px] text-[#10b981] font-bold tracking-[0.2em] uppercase">Medicine Safe Delivery</span>
             </div>
         </div>
-        <div class="flex gap-4 md:gap-6">
-            <a href="https://health.thoufiqahamed.in" class="hidden md:block text-[10px] font-bold text-white bg-white/10 px-4 py-2 rounded-lg hover:bg-[#00d2ff] hover:text-black transition uppercase tracking-widest">Book Nursing</a>
-            <a href="https://wa.me/919385352585" class="text-[10px] font-bold text-[#00d2ff] uppercase tracking-widest border border-[#00d2ff]/30 px-4 py-2 rounded-lg hover:bg-[#00d2ff]/10">Support</a>
+        <div class="text-right hidden md:block">
+            <p class="text-[8px] text-gray-500 uppercase font-black tracking-widest">Operating Area</p>
+            <p class="text-[10px] text-white font-bold uppercase">Erode, Tamil Nadu</p>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-12">
+    <main class="max-w-2xl mx-auto px-6 py-10">
         
-        <section class="upload-gradient rounded-[3rem] p-10 md:p-20 mb-20 text-center relative overflow-hidden">
-            <div class="relative z-10">
-                <span class="text-[#00d2ff] text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">Fast-Track Delivery</span>
-                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">Upload <span class="italic text-gray-400">Prescription.</span></h2>
-                <p class="text-gray-400 text-sm md:text-base mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Licensed pharmacy services at your fingertips. Upload your prescription via WhatsApp for instant verification and door-step delivery within Coimbatore.
-                </p>
-                <a href="https://wa.me/919385352585?text=Hello,%20I%20want%20to%20order%20medicines.%20Here%20is%20my%20prescription%20photo." 
-                   class="btn-glow inline-block px-12 py-5 rounded-2xl font-bold uppercase text-xs tracking-[0.2em]">
-                   Start WhatsApp Upload
-                </a>
-                <div class="mt-10 flex justify-center items-center gap-4 opacity-70">
-                    <div class="h-[1px] w-12 bg-white/20"></div>
-                    <span class="text-[9px] font-black uppercase tracking-[0.3em] text-[#00d2ff]">Licensed Pharmacists Only</span>
-                    <div class="h-[1px] w-12 bg-white/20"></div>
-                </div>
-            </div>
-        </section>
-
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-            <div>
-                <h3 class="text-3xl font-black uppercase tracking-tighter">Essential Generics</h3>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.3em] mt-2">Verified quality • Direct Savings</p>
-            </div>
-            <div class="flex gap-2">
-                <span class="px-4 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] uppercase font-bold text-gray-400">Coimbatore Stock</span>
-                <span class="px-4 py-1 bg-[#00d2ff]/10 border border-[#00d2ff]/20 rounded-full text-[9px] uppercase font-bold text-[#00d2ff]">Daily Updates</span>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="step1" class="glass-card p-10 text-center border-[#10b981]/20">
+            <h1 class="text-4xl font-black uppercase tracking-tighter mb-4 italic text-white">Smart <span class="text-[#10b981]">Scan.</span></h1>
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-[0.4em] mb-12">Identify Pills, Strips, or Prescriptions</p>
             
-            <div class="glass-card p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-[10px] text-[#00d2ff] uppercase font-black tracking-widest bg-[#00d2ff]/10 px-3 py-1 rounded">Chronic</span>
+            <div class="relative w-full aspect-[4/3] bg-white/5 rounded-[3rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center mb-10 group cursor-pointer hover:border-[#10b981]/50 transition overflow-hidden" onclick="document.getElementById('fileInput').click()">
+                <div class="w-20 h-20 bg-[#10b981]/10 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition duration-500">
+                    <svg class="w-10 h-10 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </div>
-                <h4 class="font-bold text-2xl mt-2 tracking-tight uppercase">Metformin</h4>
-                <p class="text-[10px] text-gray-500 uppercase font-bold mb-4 tracking-widest italic">Generic for Glycomet</p>
-                <p class="text-xs text-gray-400 mb-8 leading-relaxed">High-precision formulation for Type 2 Diabetes and blood sugar management.</p>
-                <div class="mt-auto flex justify-between items-center">
-                    <span class="text-lg font-black tracking-tighter">₹ Best Price</span>
-                    <a href="https://wa.me/919385352585?text=Check%20Price%20for%20Metformin%20Generic" class="text-[10px] font-black uppercase tracking-widest text-[#00d2ff] hover:text-white transition">Enquire →</a>
-                </div>
+                <span class="text-[10px] font-black uppercase text-gray-400 tracking-widest">Upload or Take Photo</span>
+                <input type="file" id="fileInput" class="hidden" accept="image/*" onchange="runAILogic()">
             </div>
-
-            <div class="glass-card p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-[10px] text-[#00d2ff] uppercase font-black tracking-widest bg-[#00d2ff]/10 px-3 py-1 rounded">Cardiac</span>
-                </div>
-                <h4 class="font-bold text-2xl mt-2 tracking-tight uppercase">Telmisartan</h4>
-                <p class="text-[10px] text-gray-500 uppercase font-bold mb-4 tracking-widest italic">Generic for Telma</p>
-                <p class="text-xs text-gray-400 mb-8 leading-relaxed">Efficient blood pressure control for long-term cardiovascular health maintenance.</p>
-                <div class="mt-auto flex justify-between items-center">
-                    <span class="text-lg font-black tracking-tighter">₹ Best Price</span>
-                    <a href="https://wa.me/919385352585?text=Check%20Price%20for%20Telmisartan%20Generic" class="text-[10px] font-black uppercase tracking-widest text-[#00d2ff] hover:text-white transition">Enquire →</a>
-                </div>
-            </div>
-
-            <div class="glass-card p-8">
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-[10px] text-[#00d2ff] uppercase font-black tracking-widest bg-[#00d2ff]/10 px-3 py-1 rounded">Gastro</span>
-                </div>
-                <h4 class="font-bold text-2xl mt-2 tracking-tight uppercase">Pantoprazole</h4>
-                <p class="text-[10px] text-gray-500 uppercase font-bold mb-4 tracking-widest italic">Generic for Pan-40</p>
-                <p class="text-xs text-gray-400 mb-8 leading-relaxed">Gastro-resistant tablets providing rapid relief from acidity and gastric reflux.</p>
-                <div class="mt-auto flex justify-between items-center">
-                    <span class="text-lg font-black tracking-tighter">₹ Best Price</span>
-                    <a href="https://wa.me/919385352585?text=Check%20Price%20for%20Pantoprazole%20Generic" class="text-[10px] font-black uppercase tracking-widest text-[#00d2ff] hover:text-white transition">Enquire →</a>
-                </div>
-            </div>
-
+            
+            <p class="text-[9px] text-gray-600 uppercase font-black tracking-[0.3em] mb-4 italic">"Medicine Safe Delivery is our motto"</p>
         </div>
 
-        <div class="mt-24">
-            <h3 class="text-3xl font-black uppercase tracking-tighter mb-8">Specialized <span class="text-[#00d2ff]">Bundles.</span></h3>
-            <div class="glass-card p-10 border-[#00d2ff]/30 bg-[#00d2ff]/5 flex flex-col md:flex-row gap-10 items-center">
-                <div class="flex-1 text-center md:text-left">
-                    <span class="bg-[#00d2ff] text-black text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Best Seller</span>
-                    <h4 class="text-3xl font-bold mt-4 uppercase tracking-tighter">Senior Citizen Chronic Care Kit</h4>
-                    <p class="text-gray-400 mt-4 text-sm leading-relaxed max-w-xl">
-                        A complete monitoring essential for home care. Includes a Digital BP Monitor, Pulse Oximeter, and a 7-day Pill Organizer.
-                    </p>
-                    <div class="flex flex-wrap justify-center md:justify-start items-center gap-6 mt-8">
-                        <span class="text-2xl font-black text-white tracking-tighter">₹2,999 <span class="text-sm text-gray-600 line-through ml-2">₹4,500</span></span>
-                        <a href="https://wa.me/919385352585?text=I%20am%20interested%20in%20the%20Senior%20Citizen%20Care%20Kit" 
-                           class="bg-white text-black px-10 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest hover:bg-[#00d2ff] transition">
-                           Book Bundle
-                        </a>
-                    </div>
-                </div>
+        <div id="step2" class="step-hidden glass-card p-20 text-center relative overflow-hidden">
+            <div class="scanner-line"></div>
+            <div class="w-24 h-24 bg-[#10b981]/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-[#10b981]/20">
+                <div class="w-12 h-12 border-4 border-[#10b981] border-t-transparent rounded-full animate-spin"></div>
             </div>
+            <h2 class="text-2xl font-black uppercase tracking-widest text-[#10b981]">AI Neural Scan...</h2>
+            <p class="text-gray-500 text-[10px] mt-4 uppercase font-bold tracking-widest">Analyzing Image Patterns & Text</p>
         </div>
 
-        <div class="mt-24 p-12 border-t border-white/5 grid md:grid-cols-3 gap-12 text-center">
-            <div>
-                <h5 class="text-[#00d2ff] font-black uppercase text-xs tracking-[0.2em] mb-2">Verified Quality</h5>
-                <p class="text-[10px] text-gray-500 uppercase font-bold leading-loose tracking-widest">Sourced directly from ISO-certified manufacturers.</p>
+        <div id="step3" class="step-hidden glass-card p-10">
+            <h2 class="text-white font-black uppercase text-sm mb-8 tracking-widest border-l-4 border-[#10b981] pl-6">Detected Results</h2>
+            <div id="aiMedList" class="space-y-4 mb-10">
+                </div>
+
+            <div class="bg-white/5 p-8 rounded-[2.5rem] mb-10 border border-white/5">
+                <p class="text-[10px] text-[#10b981] uppercase font-black mb-4 tracking-widest">Delivery Distance (KM)</p>
+                <div class="flex items-center gap-6">
+                    <input type="number" id="kmInput" value="1" min="1" class="w-full bg-black border border-white/10 p-5 rounded-2xl text-2xl font-black text-white outline-none focus:border-[#10b981]">
+                    <span class="text-gray-500 font-bold uppercase text-xs">Distance</span>
+                </div>
+                <div class="mt-6 flex flex-col gap-2">
+                    <div class="flex justify-between text-[9px] font-black uppercase text-gray-600"><span>First 5KM</span><span>₹50 (Base)</span></div>
+                    <div class="flex justify-between text-[9px] font-black uppercase text-gray-600"><span>Additional KM</span><span>+₹10/KM</span></div>
+                </div>
             </div>
-            <div>
-                <h5 class="text-[#00d2ff] font-black uppercase text-xs tracking-[0.2em] mb-2">Legal Compliance</h5>
-                <p class="text-[10px] text-gray-500 uppercase font-bold leading-loose tracking-widest">Strict adherence to Indian Drugs & Cosmetics Act.</p>
-            </div>
-            <div>
-                <h5 class="text-[#00d2ff] font-black uppercase text-xs tracking-[0.2em] mb-2">Express Delivery</h5>
-                <p class="text-[10px] text-gray-500 uppercase font-bold leading-loose tracking-widest">Temperature controlled transport across Coimbatore.</p>
-            </div>
+
+            <button onclick="processFinalBill()" class="w-full btn-msd py-6 rounded-2xl uppercase text-xs tracking-widest">Confirm & Generate Quote</button>
         </div>
+
+        <div id="step4" class="step-hidden glass-card p-10 border-[#10b981]/30">
+            <div class="text-center mb-10">
+                <span class="text-[#10b981] text-[10px] font-black uppercase tracking-[0.5em]">Verified Quote</span>
+                <h2 class="text-2xl font-black text-white uppercase mt-2">Order Summary</h2>
+            </div>
+            
+            <div class="space-y-6 mb-12 text-sm font-bold uppercase tracking-widest border-b border-white/5 pb-10">
+                <div class="flex justify-between text-gray-500"><span>Medicine Value</span><span id="finalMedPrice">₹ 0</span></div>
+                <div class="flex justify-between text-gray-500"><span>Safe Transport (Erode)</span><span id="finalShipPrice">₹ 0</span></div>
+                <div class="flex justify-between text-2xl text-[#10b981] font-black mt-4 pt-4 border-t border-white/5"><span>Total Due</span><span id="finalGrandTotal">₹ 0</span></div>
+            </div>
+
+            <button onclick="orderViaWhatsApp()" class="w-full bg-[#25D366] text-white py-6 rounded-2xl font-black uppercase text-xs tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-green-900/40">
+                Confirm & Deliver via WhatsApp
+            </button>
+            <p class="text-center text-[8px] text-gray-600 mt-8 uppercase tracking-[0.3em] font-bold italic">Medicine Safe Delivery is our Motto</p>
+        </div>
+
     </main>
 
-    <footer class="py-20 border-t border-white/5 bg-black/40 text-center">
-        <div class="flex justify-center gap-12 mb-8 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-600">
-            <a href="privacy.html" class="hover:text-[#00d2ff] transition">Privacy</a>
-            <a href="terms.html" class="hover:text-[#00d2ff] transition">Terms</a>
-            <a href="refund.html" class="hover:text-[#00d2ff] transition">Refunds</a>
-        </div>
-        <p class="text-[9px] text-gray-800 uppercase tracking-[0.8em]">© 2026 Thoufiq Ahamed Pharma-Hub Coimbatore</p>
+    <footer class="py-12 text-center">
+        <div class="h-[1px] w-20 bg-white/10 mx-auto mb-8"></div>
+        <p class="text-[9px] text-gray-800 uppercase tracking-[0.8em]">© 2026 E-PHARM-MSD ERODE OPERATIONS</p>
     </footer>
 
+    <script>
+        // AI Simulation Data
+        const extractedMeds = [
+            { name: "Metformin 500mg", price: 180 },
+            { name: "Atorvastatin 10mg", price: 240 }
+        ];
+
+        function runAILogic() {
+            document.getElementById('step1').classList.add('step-hidden');
+            document.getElementById('step2').classList.remove('step-hidden');
+            
+            setTimeout(() => {
+                document.getElementById('step2').classList.add('step-hidden');
+                document.getElementById('step3').classList.remove('step-hidden');
+                
+                const list = document.getElementById('aiMedList');
+                list.innerHTML = extractedMeds.map(item => `
+                    <div class="flex items-center justify-between bg-white/5 p-6 rounded-2xl border border-white/5">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-black uppercase tracking-widest text-white">${item.name}</span>
+                            <span class="text-[8px] text-[#10b981] font-bold uppercase tracking-widest mt-1">Found in Database</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-[9px] text-gray-600 font-bold uppercase tracking-widest">Qty</span>
+                            <input type="number" value="10" class="w-14 bg-black border border-[#10b981]/30 text-center rounded-xl text-xs py-2 text-[#10b981] font-black outline-none">
+                        </div>
+                    </div>
+                `).join('');
+            }, 3000);
+        }
+
+        function processFinalBill() {
+            const dist = parseFloat(document.getElementById('kmInput').value);
+            let shipping = 50; 
+            if (dist > 5) {
+                shipping += (dist - 5) * 10;
+            }
+
+            const meds = 420; // Simulated total value
+            const total = meds + shipping;
+
+            document.getElementById('finalMedPrice').innerText = "₹" + meds;
+            document.getElementById('finalShipPrice').innerText = "₹" + shipping;
+            document.getElementById('finalGrandTotal').innerText = "₹" + total;
+
+            document.getElementById('step3').classList.add('step-hidden');
+            document.getElementById('step4').classList.remove('step-hidden');
+        }
+
+        function orderViaWhatsApp() {
+            const total = document.getElementById('finalGrandTotal').innerText;
+            const km = document.getElementById('kmInput').value;
+            const motto = "Medicine Safe Delivery";
+            const message = `E-PHARM-MSD: New Order Request\nMotto: ${motto}\nDistance: ${km} KM\nTotal: ${total}\nPlease dispatch for Erode delivery.`;
+            window.location.href = `https://wa.me/919385352585?text=${encodeURIComponent(message)}`;
+        }
+    </script>
 </body>
 </html>
