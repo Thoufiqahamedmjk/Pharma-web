@@ -3,202 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-pharm-MSD | Master Engine</title>
+    <title>MSD | E-pharm-MSD Erode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fcfaff; color: #1e1b4b; }
-        .purple-card { background: white; border: 1px solid #e2e0ff; border-radius: 2rem; box-shadow: 0 12px 40px rgba(79, 70, 229, 0.08); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fdfcff; color: #1e1b4b; }
+        .msd-card { background: white; border-radius: 2.5rem; border: 1px solid #f0eeff; box-shadow: 0 20px 50px rgba(79, 70, 229, 0.04); }
         .step-hidden { display: none; }
-        .scanner-line { height: 4px; width: 100%; background: #7c3aed; position: absolute; animation: scan 2s linear infinite; box-shadow: 0 0 15px #7c3aed; }
-        @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
-        .history-pill { background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 12px; padding: 10px; margin-top: 8px; cursor: pointer; font-size: 11px; }
+        .upload-zone { background: #f8f7ff; border: 2px dashed #dcd7ff; transition: 0.3s; }
+        .upload-zone:active { transform: scale(0.98); background: #f0eeff; }
+        .status-dot { width: 8px; height: 8px; background: #25D366; border-radius: 50%; display: inline-block; margin-right: 5px; }
     </style>
 </head>
-<body class="p-4 pb-12">
+<body class="p-4 bg-[#fcfaff] min-h-screen flex flex-col items-center">
 
-    <nav class="max-w-md mx-auto flex justify-between items-center py-6 border-b border-purple-50 mb-6">
+    <header class="w-full max-w-md flex items-center justify-between py-6">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-purple-700 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">MSD</div>
+            <div class="w-12 h-12 bg-purple-700 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-purple-100">MSD</div>
             <div>
-                <h1 class="text-sm font-black text-purple-950 uppercase tracking-tighter">E-pharm-MSD</h1>
-                <p class="text-[8px] text-purple-400 font-bold uppercase tracking-widest italic">Medicine Safe Delivery</p>
+                <h1 class="text-xs font-black text-purple-950 uppercase tracking-tighter">E-pharm-MSD</h1>
+                <p class="text-[8px] text-purple-400 font-bold uppercase tracking-[0.3em]">Medicine Safe Delivery</p>
             </div>
         </div>
-    </nav>
-
-    <main class="max-w-md mx-auto space-y-6">
-
-        <div id="step1" class="purple-card p-8">
-            <h2 class="text-xl font-black text-purple-900 mb-6 uppercase">Customer Portal</h2>
-            <div class="space-y-4">
-                <input type="tel" id="uPhone" placeholder="WhatsApp Number" class="w-full p-4 border-2 border-purple-50 rounded-xl font-bold text-center focus:border-purple-600 outline-none transition">
-                <input type="text" id="uName" placeholder="Patient Name" class="w-full p-4 border-2 border-purple-50 rounded-xl font-bold text-center focus:border-purple-600 outline-none transition">
-                <input type="number" id="uAge" placeholder="Age" class="w-full p-4 border-2 border-purple-50 rounded-xl font-bold text-center focus:border-purple-600 outline-none transition">
-            </div>
-
-            <div id="historyBox" class="hidden mt-8 border-t pt-6">
-                <p class="text-[10px] font-black text-purple-400 uppercase mb-2">Previous Orders (Last 5)</p>
-                <div id="historyList" class="space-y-2"></div>
-            </div>
-
-            <button onclick="saveAndGoToScan()" class="w-full mt-8 bg-purple-700 text-white py-5 rounded-2xl font-black uppercase tracking-widest hover:bg-purple-800 transition shadow-xl shadow-purple-100">Proceed to AI Scan</button>
+        <div class="text-[9px] font-black uppercase text-gray-400 border px-3 py-1 rounded-full italic">
+            <span class="status-dot"></span> Erode Hub Active
         </div>
+    </header>
 
-        <div id="step2" class="step-hidden purple-card p-10 text-center relative overflow-hidden">
-            <div id="scanLine" class="scanner-line hidden"></div>
-            <h2 class="text-lg font-black text-purple-900 mb-8 uppercase">Neural Prescription Scan</h2>
-            <div class="w-full aspect-square bg-purple-50 rounded-[2.5rem] border-2 border-dashed border-purple-200 flex flex-col items-center justify-center cursor-pointer group" onclick="document.getElementById('fileIn').click()">
-                <div class="p-6 bg-white rounded-full shadow-md mb-4 group-hover:scale-110 transition">
-                    <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                </div>
-                <p class="text-[10px] font-black text-purple-400 uppercase">Upload or Take Photo</p>
-                <input type="file" id="fileIn" class="hidden" accept="image/*" onchange="performScan()">
-            </div>
-        </div>
+    <main class="w-full max-w-md space-y-6">
 
-        <div id="step3" class="step-hidden purple-card p-8">
-            <h2 class="text-sm font-black text-purple-900 uppercase mb-6 border-l-4 border-purple-700 pl-4">Verify Extracted Meds</h2>
+        <div id="step1" class="msd-card p-10 mt-4 text-center">
+            <h2 class="text-2xl font-black text-purple-900 mb-2 italic lowercase">Welcome back.</h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-10">WhatsApp Number is your Identity</p>
             
-            <div id="medList" class="space-y-3 mb-8">
-                </div>
-
-            <div class="bg-purple-950 p-6 rounded-[2rem] text-white mb-8">
-                <p class="text-[9px] font-black uppercase opacity-60 mb-4 tracking-widest text-center">Logistics: Erode Hub</p>
-                <button onclick="calculateGPS()" id="distBtn" class="w-full py-4 bg-white/10 border border-white/20 rounded-xl font-black text-[10px] uppercase tracking-widest">📍 Sync Live Distance</button>
-                <p id="distDisplay" class="text-center text-[10px] mt-4 font-bold uppercase italic"></p>
+            <div class="space-y-4 text-left">
+                <label class="text-[9px] font-black uppercase text-purple-400 pl-4">Customer Details</label>
+                <input type="text" id="fName" placeholder="First Name *" class="w-full p-5 bg-gray-50 rounded-2xl font-bold outline-none focus:ring-2 ring-purple-100 border-none">
+                <input type="text" id="lName" placeholder="Last Name" class="w-full p-5 bg-gray-50 rounded-2xl font-bold outline-none focus:ring-2 ring-purple-100 border-none">
+                <input type="tel" id="waID" placeholder="WhatsApp Mobile *" class="w-full p-5 bg-gray-50 rounded-2xl font-bold text-center outline-none focus:ring-2 ring-purple-100 border-none">
             </div>
 
-            <button onclick="toFinalInvoice()" class="w-full bg-purple-700 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg">Generate Official Invoice</button>
+            <button onclick="handleLogin()" class="w-full mt-10 bg-[#25D366] text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-green-50 transition active:scale-95">
+                Login with WhatsApp
+            </button>
         </div>
 
-        <div id="step4" class="step-hidden purple-card p-0 overflow-hidden border-b-8 border-purple-900">
-            <div class="bg-purple-900 p-10 text-center text-white">
-                <h2 class="text-2xl font-black uppercase tracking-tighter italic">Official Invoice</h2>
-                <p class="text-[9px] font-bold opacity-60 uppercase tracking-[0.4em] mt-2">E-pharm-MSD Erode</p>
-            </div>
-            <div class="p-10">
-                <div class="flex justify-between border-b border-purple-50 pb-6 mb-8 text-[10px] font-black uppercase text-purple-400">
-                    <div>Patient: <span id="fName" class="text-purple-950 block text-xs">--</span></div>
-                    <div>Age: <span id="fAge" class="text-purple-950 block text-xs text-right">--</span></div>
-                </div>
+        <div id="step2" class="step-hidden msd-card p-10 text-center">
+            <h2 class="text-xl font-black text-purple-950 mb-2">Hello, <span id="userName" class="text-purple-600">User</span></h2>
+            <p class="text-[10px] font-bold text-gray-400 mb-8 uppercase tracking-widest italic">Snap. Upload. Receive.</p>
 
-                <div class="space-y-4 mb-10">
-                    <div class="flex justify-between text-xs font-bold uppercase text-gray-400"><span>Meds Value</span><span id="fMedsValue" class="text-purple-950">₹ 0</span></div>
-                    <div class="flex justify-between text-xs font-bold uppercase text-gray-400"><span>Safe Delivery Fee</span><span id="fShipValue" class="text-purple-950">₹ 0</span></div>
-                    <div class="flex justify-between text-2xl font-black uppercase text-purple-950 pt-6 border-t-2 border-purple-900"><span>Total Due</span><span id="fGrandTotal">₹ 0</span></div>
+            <div onclick="document.getElementById('photoInput').click()" class="upload-zone w-full py-12 rounded-[3rem] cursor-pointer group">
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
                 </div>
-
-                <button onclick="whatsappFinal()" class="w-full bg-[#25D366] text-white py-6 rounded-2xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3">
-                    Confirm & Dispatch
-                </button>
-                <p class="text-center text-[8px] text-gray-400 mt-8 font-black uppercase italic tracking-widest">Medicine Safe Delivery is our Motto</p>
+                <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Tap to add prescription / Strips</p>
+                <input type="file" id="photoInput" class="hidden" multiple accept="image/*" onchange="previewImages()">
             </div>
+
+            <div id="previewList" class="flex flex-wrap gap-2 justify-center mt-6"></div>
+
+            <button onclick="submitToPartner()" class="w-full mt-10 bg-purple-700 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-purple-50 transition active:scale-95">
+                All Done? Dispatch
+            </button>
+        </div>
+
+        <div id="step3" class="step-hidden msd-card p-12 text-center">
+            <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h2 class="text-2xl font-black text-purple-950 mb-4">Request Sent!</h2>
+            <p class="text-xs font-bold text-gray-500 mb-10 leading-relaxed italic">
+                Our Delivery Partner will now contact you at <span id="finalPhone" class="text-purple-600"></span> for confirmation.
+            </p>
+            <button onclick="location.reload()" class="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em] border-b-2 border-purple-200 pb-2">Back to Home</button>
         </div>
 
     </main>
 
     <script>
-        const HUB = { lat: 11.3410, lng: 77.7172 };
-        let currentKM = 1;
+        // Database Memory
+        let users = JSON.parse(localStorage.getItem('msd_db')) || {};
+        let uploadedCount = 0;
 
-        // AUTH & MEMORY LOGIC
-        function saveAndGoToScan() {
-            const phone = document.getElementById('uPhone').value;
-            const name = document.getElementById('uName').value;
-            const age = document.getElementById('uAge').value;
-            if(!phone || !name) return alert("Please fill WhatsApp and Name");
+        function handleLogin() {
+            const f = document.getElementById('fName').value;
+            const p = document.getElementById('waID').value;
+            if(!f || !p) return alert("Please fill mandatory fields!");
 
-            let db = JSON.parse(localStorage.getItem('msd_master')) || {};
-            if(!db[phone]) db[phone] = { name, age, history: [] };
-            localStorage.setItem('msd_master', JSON.stringify(db));
+            users[p] = { f, l: document.getElementById('lName').value };
+            localStorage.setItem('msd_db', JSON.stringify(users));
 
+            document.getElementById('userName').innerText = f;
             document.getElementById('step1').classList.add('step-hidden');
             document.getElementById('step2').classList.remove('step-hidden');
         }
 
-        window.onload = () => {
-            const phInput = document.getElementById('uPhone');
-            phInput.oninput = () => {
-                let db = JSON.parse(localStorage.getItem('msd_master')) || {};
-                const user = db[phInput.value];
-                if(user) {
-                    document.getElementById('uName').value = user.name;
-                    document.getElementById('uAge').value = user.age;
-                    if(user.history.length > 0) {
-                        document.getElementById('historyBox').classList.remove('hidden');
-                        document.getElementById('historyList').innerHTML = user.history.slice(-5).map(h => `
-                            <div class="history-pill font-bold uppercase">Order on ${h.date} - Total: ${h.total}</div>
-                        `).join('');
-                    }
-                }
-            };
+        // Auto-fill Logic
+        document.getElementById('waID').oninput = function() {
+            const data = users[this.value];
+            if(data) {
+                document.getElementById('fName').value = data.f;
+                document.getElementById('lName').value = data.l;
+            }
         };
 
-        // SCAN LOGIC
-        function performScan() {
-            document.getElementById('scanLine').classList.remove('hidden');
-            setTimeout(() => {
-                document.getElementById('step2').classList.add('step-hidden');
-                document.getElementById('step3').classList.remove('step-hidden');
-                initEditablePanel();
-            }, 3000);
-        }
-
-        function initEditablePanel() {
-            const list = document.getElementById('medList');
-            // We provide 3 empty editable boxes for the "Power Pack"
-            list.innerHTML = [1, 2, 3].map(i => `
-                <div class="flex gap-2">
-                    <input type="text" placeholder="Medicine Name" class="flex-[3] p-4 bg-purple-50 rounded-xl text-xs font-bold border border-purple-100" id="medName${i}">
-                    <input type="number" placeholder="Qty" class="flex-1 p-4 bg-purple-50 rounded-xl text-xs font-black text-center border border-purple-100" id="medQty${i}">
-                </div>
-            `).join('');
-        }
-
-        // LOGISTICS ENGINE
-        function calculateGPS() {
-            if(navigator.geolocation) {
-                document.getElementById('distBtn').innerText = "SYNCING GPS...";
-                navigator.geolocation.getCurrentPosition(pos => {
-                    const R = 6371;
-                    const dLat = (pos.coords.latitude - HUB.lat) * Math.PI / 180;
-                    const dLon = (pos.coords.longitude - HUB.lng) * Math.PI / 180;
-                    const a = Math.sin(dLat/2)**2 + Math.cos(HUB.lat*Math.PI/180)*Math.cos(pos.coords.latitude*Math.PI/180)*Math.sin(dLon/2)**2;
-                    currentKM = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                    document.getElementById('distDisplay').innerText = `ERODE DISTANCE: ${currentKM.toFixed(1)} KM`;
-                    document.getElementById('distBtn').innerText = "✅ LOCATION SYNCED";
-                });
+        function previewImages() {
+            const list = document.getElementById('previewList');
+            const files = document.getElementById('photoInput').files;
+            uploadedCount = files.length;
+            list.innerHTML = "";
+            for(let f of files) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = "w-16 h-16 object-cover rounded-xl border-2 border-purple-100 shadow-sm";
+                    list.appendChild(img);
+                }
+                reader.readAsDataURL(f);
             }
         }
 
-        // INVOICE ENGINE
-        function toFinalInvoice() {
-            let shipFee = 50; if(currentKM > 5) shipFee += (currentKM - 5) * 10;
-            const medValue = 250; // Bridge value until drug list is added
+        function submitToPartner() {
+            if(uploadedCount === 0) return alert("Please upload medicine photos!");
             
-            document.getElementById('fName').innerText = document.getElementById('uName').value;
-            document.getElementById('fAge').innerText = document.getElementById('uAge').value + " YRS";
-            document.getElementById('fMedsValue').innerText = "₹" + medValue;
-            document.getElementById('fShipValue').innerText = "₹" + shipFee.toFixed(0);
-            document.getElementById('fGrandTotal').innerText = "₹" + (medValue + shipFee).toFixed(0);
-
-            document.getElementById('step3').classList.add('step-hidden');
-            document.getElementById('step4').classList.remove('step-hidden');
-        }
-
-        // WHATSAPP CHAIN
-        function whatsappFinal() {
-            const phone = document.getElementById('uPhone').value;
-            const total = document.getElementById('fGrandTotal').innerText;
+            const f = document.getElementById('fName').value;
+            const p = document.getElementById('waID').value;
             
-            // Update Database Memory
-            let db = JSON.parse(localStorage.getItem('msd_master'));
-            db[phone].history.push({ date: new Date().toLocaleDateString(), total: total });
-            localStorage.setItem('msd_master', JSON.stringify(db));
+            // Logic: Create Secure Reference
+            const orderRef = "MSD-" + Date.now().toString().slice(-4);
+            const msg = `*NEW MSD DISPATCH*\nOrder: ${orderRef}\nCustomer: ${f}\nID: ${p}\nItems: ${uploadedCount} Photos\n\n_Medicine Safe Delivery is our Motto._`;
+            
+            const deliveryBoy = "919385352585"; 
 
-            const msg = `*MSD OFFICIAL ORDER*\nPatient: ${document.getElementById('uName').value}\nTotal: ${total}\nDistance: ${currentKM.toFixed(1)}KM\n\nMedicine Safe Delivery is our Motto.`;
-            window.location.href = `https://wa.me/919385352585?text=${encodeURIComponent(msg)}`;
+            document.getElementById('finalPhone').innerText = p;
+            document.getElementById('step2').classList.add('step-hidden');
+            document.getElementById('step3').classList.remove('step-hidden');
+
+            setTimeout(() => {
+                window.location.href = `https://wa.me/${deliveryBoy}?text=${encodeURIComponent(msg)}`;
+            }, 1200);
         }
     </script>
 </body>
