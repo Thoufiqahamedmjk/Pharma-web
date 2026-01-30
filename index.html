@@ -18,7 +18,7 @@
             <div class="w-10 h-10 bg-purple-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">M</div>
             <h1 class="text-xs font-black text-purple-950 uppercase">E-PHARM-MSD</h1>
         </div>
-        <div id="priceBadge" class="hidden text-[10px] font-black text-white bg-green-500 px-4 py-1 rounded-full">
+        <div id="priceBadge" class="hidden text-[10px] font-black text-white bg-green-500 px-4 py-1 rounded-full animate-pulse">
             TOTAL: ₹<span id="displayTotal">0</span>
         </div>
     </header>
@@ -26,30 +26,32 @@
     <main class="w-full max-w-md space-y-4">
         
         <div id="customerView" class="msd-card p-8">
-            <h2 class="text-lg font-black text-purple-900 mb-6 italic text-center uppercase tracking-tighter">New Order</h2>
+            <h2 class="text-lg font-black text-purple-900 mb-6 italic text-center uppercase tracking-tighter">Place Order</h2>
             <div class="space-y-4">
-                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-none">
+                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-none shadow-sm">
                 <div class="p-4 border-2 border-dashed border-purple-100 rounded-2xl text-center bg-purple-50/20">
-                    <p class="text-[9px] font-black text-purple-300 uppercase mb-2">Upload Prescription</p>
+                    <p class="text-[9px] font-black text-purple-300 uppercase mb-2">Prescription Photo</p>
                     <input type="file" id="photoIn" accept="image/*" class="text-[10px] font-bold text-gray-400">
                 </div>
             </div>
             <button onclick="uploadToCloud()" id="mainBtn" class="w-full mt-8 bg-purple-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
-                Dispatch Order
+                Send to Delivery Boy
             </button>
         </div>
 
         <div id="partnerView" class="hidden msd-card p-8 bg-slate-900 text-white border-none">
-            <h2 class="text-lg font-black text-purple-400 mb-4 uppercase italic">Partner Hub</h2>
-            <input type="number" id="medPrice" placeholder="Medicine Amount (₹)" class="w-full p-4 bg-slate-800 rounded-2xl font-bold outline-none text-white mb-4 border-none">
-            <button onclick="calculateFinalBill()" class="w-full py-4 bg-green-500 rounded-2xl font-black uppercase text-sm">Update Bill</button>
+            <h2 class="text-lg font-black text-purple-400 mb-4 uppercase italic text-center underline decoration-purple-900">Partner Hub</h2>
+            <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase tracking-widest text-center">Billing Console</p>
+            <input type="number" id="medPrice" placeholder="Medicine Amount (₹)" class="w-full p-4 bg-slate-800 rounded-2xl font-bold outline-none text-white mb-4 border-none shadow-inner">
+            <button onclick="calculateFinalBill()" class="w-full py-4 bg-green-500 rounded-2xl font-black uppercase text-sm shadow-lg active:bg-green-600 transition-colors">Update Total Bill</button>
         </div>
+
     </main>
 
     <script>
-        // CLOUDINARY CONFIG
+        // CONFIGURATION
         const CLOUD_NAME = "du14a1qmh"; 
-        const UPLOAD_PRESET = "ml_default"; // Change this if you created a custom one
+        const UPLOAD_PRESET = "msd_live"; // Use the name you saved in step 1
         const PARTNER_WA = "919385352585";
         const DELIVERY_FEE = 25;
 
@@ -58,9 +60,9 @@
             const file = document.getElementById('photoIn').files[0];
             const btn = document.getElementById('mainBtn');
 
-            if(!name || !file) return alert("Missing Info!");
+            if(!name || !file) return alert("Please fill Name and Select Photo");
 
-            btn.innerText = "SENDING TO CLOUD...";
+            btn.innerText = "LINKING TO CLOUD...";
             btn.disabled = true;
 
             const formData = new FormData();
@@ -72,26 +74,32 @@
                     method: 'POST',
                     body: formData
                 });
+                
                 const data = await resp.json();
                 
-                // We send the "Secure URL" which WhatsApp can open
+                if(!data.secure_url) {
+                    throw new Error("Cloudinary Error: Make sure your preset is UNSIGNED and named correctly.");
+                }
+
                 const photoUrl = data.secure_url;
-                const partnerLink = window.location.href + "?partner=true";
+                const partnerLink = window.location.href.split('?')[0] + "?partner=true";
                 
-                // Formatted Message for WhatsApp
-                const message = `*--- NEW MSD ORDER ---*%0A*Patient:* ${name}%0A*View Prescription:* ${photoUrl}%0A----------------------%0A*Partner Billing Link:* ${partnerLink}`;
+                // Formatted message with clear separation for WhatsApp
+                const message = `*--- NEW MSD ORDER ---*%0A*Patient:* ${name}%0A%0A*1. VIEW PHOTO:*%0A${photoUrl}%0A%0A*2. UPDATE BILL:*%0A${partnerLink}`;
                 
                 window.location.href = `https://wa.me/${PARTNER_WA}?text=${message}`;
             } catch (e) {
-                alert("Upload Error! Check your Cloudinary settings.");
+                alert("Upload failed! Error: " + e.message);
                 btn.disabled = false;
+                btn.innerText = "Send to Delivery Boy";
             }
         }
 
         function calculateFinalBill() {
             const medCost = parseFloat(document.getElementById('medPrice').value) || 0;
-            localStorage.setItem('msd_order_total', medCost + DELIVERY_FEE);
-            alert("Bill Updated!");
+            const total = medCost + DELIVERY_FEE;
+            localStorage.setItem('msd_order_total', total);
+            alert(`Bill Updated to ₹${total}!`);
             window.location.search = ""; 
         }
 
