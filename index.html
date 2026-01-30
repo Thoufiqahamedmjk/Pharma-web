@@ -2,136 +2,192 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicine Safe Delivery PHARMA | Dispatch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>MSD PRO | Erode Pharmacy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; }
-        .card { background: white; border-radius: 2rem; shadow-sm; border: 1px solid #eef2f6; }
-        .input-box { background: #f1f5f9; border-radius: 1rem; padding: 1rem; width: 100%; outline: none; font-weight: 700; }
-        #finalBtn, #boyConsole { display: none; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .card { background: white; border-radius: 2.5rem; box-shadow: 0 15px 40px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+        .upi-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        .dispatch-btn { background: #0f172a; display: none; }
+        #zoomOverlay { background: rgba(0,0,0,0.98); touch-action: none; }
+        .zoom-img-container { overflow: auto; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        .badge-verified { background: #ecfdf5; color: #059669; border: 1px solid #10b981; }
     </style>
 </head>
-<body class="min-h-screen pt-20 px-6 pb-10">
+<body class="min-h-screen">
 
-    <nav class="fixed top-0 left-0 w-full bg-white border-b p-5 z-50 flex justify-between items-center">
-        <div class="flex items-center gap-2" onclick="enableBoyMode()">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">M</div>
-            <span class="font-extrabold tracking-tighter uppercase text-lg">MSD <span class="text-indigo-600">PHARMA</span></span>
+    <nav class="fixed top-0 w-full z-50 glass-nav px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">M</div>
+            <span class="font-extrabold tracking-tighter text-slate-900 text-lg uppercase">MSD <span class="text-indigo-600 font-medium">Pro</span></span>
         </div>
-        <span class="text-[9px] font-black bg-slate-100 px-3 py-1 rounded-full uppercase text-slate-500">Erode</span>
     </nav>
 
-    <main class="max-w-md mx-auto space-y-6">
+    <main class="max-w-md mx-auto px-6 pt-24 pb-12">
         
-        <div id="customerForm" class="card p-8 space-y-6">
-            <h2 class="text-xl font-black">Patient Details</h2>
-            <div class="space-y-4">
-                <input type="text" id="custName" oninput="validate()" placeholder="Patient Name" class="input-box">
-                <input type="tel" id="custPhone" oninput="validate()" maxlength="10" placeholder="Patient WhatsApp" class="input-box">
-                
-                <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-2xl py-8 bg-slate-50 text-center cursor-pointer">
-                    <p id="fileLabel" class="text-[10px] font-black text-slate-400 uppercase">1. Attach Prescription</p>
-                    <input type="file" id="fileIn" multiple class="hidden" onchange="validate()">
-                </div>
-            </div>
+        <div id="customerView" class="space-y-6">
+            <div class="card p-8">
+                <h1 class="text-2xl font-black text-slate-900 mb-6 tracking-tight">New Order</h1>
+                <div class="space-y-4">
+                    <input type="text" id="pName" oninput="validateForm()" placeholder="Patient Name" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
+                    <input type="tel" id="pPhone" oninput="validateForm()" maxlength="10" placeholder="10 Digit WhatsApp No" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
+                    
+                    <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-[2rem] py-6 bg-slate-50 text-center cursor-pointer">
+                        <span id="fileCount" class="text-[10px] font-black text-slate-400 uppercase">1. Attach Prescription</span>
+                        <input type="file" id="fileIn" multiple class="hidden" onchange="validateForm()">
+                    </div>
 
-            <div id="payArea" class="hidden space-y-4 pt-4 border-t">
-                <div class="p-6 bg-indigo-50 rounded-[2rem] text-center border border-indigo-100">
-                    <p class="text-[10px] font-black text-indigo-400 uppercase mb-3 text-center">2. Scan & Pay ₹50 Advance</p>
-                    <img src="qr.jpg" class="w-48 h-48 mx-auto rounded-xl shadow-sm mb-2" alt="Payment QR">
-                </div>
+                    <div id="paySection" class="hidden p-6 bg-indigo-50 rounded-3xl border border-indigo-100">
+                        <p class="text-[10px] font-black text-indigo-400 uppercase mb-2">2. Pay Advance</p>
+                        <a href="upi://pay?pa=9385352585@ybl&pn=MSD_Pharma&am=50&cu=INR" class="upi-btn w-full text-white py-4 rounded-2xl font-black text-xs text-center block shadow-lg">Pay ₹50 via UPI</a>
+                        <div class="mt-6 pt-6 border-t border-indigo-200">
+                            <p class="text-[10px] font-black text-indigo-600 uppercase mb-3 text-center">3. Upload Screenshot</p>
+                            <div onclick="document.getElementById('payProofIn').click()" class="border-2 border-indigo-300 border-dashed rounded-2xl py-4 bg-white text-center cursor-pointer">
+                                <span id="proofStatus" class="text-[10px] font-black text-indigo-400 uppercase">Upload Payment Proof</span>
+                                <input type="file" id="payProofIn" class="hidden" onchange="unlockDispatch()">
+                            </div>
+                        </div>
+                    </div>
 
-                <div onclick="document.getElementById('proofIn').click()" class="border-2 border-dashed border-indigo-200 rounded-xl py-4 bg-white text-center cursor-pointer">
-                    <p id="proofLabel" class="text-[10px] font-black text-indigo-500 uppercase">3. Upload Screenshot</p>
-                    <input type="file" id="proofIn" class="hidden" onchange="checkProof()">
+                    <button onclick="sendOrder()" id="mainBtn" class="dispatch-btn w-full mt-4 text-white py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl">Confirm & Dispatch</button>
                 </div>
-
-                <button id="finalBtn" onclick="handleOrder()" class="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl">Confirm Order</button>
             </div>
         </div>
 
-        <div id="boyConsole" class="card p-8 space-y-6 border-t-4 border-emerald-500">
-            <h2 class="text-xl font-black uppercase text-emerald-600">Boy Billing</h2>
-            <div class="space-y-4">
-                <input type="number" id="medPrice" oninput="calc()" placeholder="Medicine Price (₹)" class="input-box">
-                <input type="number" id="dist" oninput="calc()" placeholder="Distance (km)" class="input-box">
-                
-                <div class="bg-slate-50 p-4 rounded-xl text-sm font-bold">
-                    <div class="flex justify-between"><span>Delivery:</span><span id="dFee">₹0</span></div>
-                    <div class="flex justify-between text-lg font-black mt-1"><span>Total:</span><span id="tBill">₹0</span></div>
+        <div id="partnerView" class="hidden space-y-6">
+            <div class="card p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <p class="text-[10px] font-bold text-indigo-500 uppercase">Customer</p>
+                        <h2 class="text-2xl font-black text-slate-900" id="orderTitle">...</h2>
+                    </div>
+                    <div class="badge-verified px-3 py-1 rounded-lg text-[10px] font-black uppercase">₹50 Paid</div>
                 </div>
-                <button onclick="sendBill()" class="w-full py-4 bg-emerald-600 text-white rounded-xl font-black uppercase text-xs">Send Bill to Patient</button>
+
+                <div id="partnerGallery" class="grid grid-cols-2 gap-3 mb-8"></div>
+                
+                <div class="p-5 bg-slate-50 rounded-3xl border border-slate-100 mb-6">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Acknowledgement</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <p class="text-xs font-bold text-slate-600 leading-tight">Advance Payment Screenshot Received & Verified</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <input type="number" id="billPrice" placeholder="Medicine Amount (₹)" class="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold text-lg outline-none">
+                    <button onclick="completeAndNotify()" class="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest">Send Final Bill</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="receiptView" class="hidden space-y-6">
+            <div class="card p-8">
+                <h2 class="text-2xl font-black text-slate-900 text-center mb-8 italic">Verified Receipt</h2>
+                <div class="bg-slate-50 rounded-3xl p-6 space-y-4 border border-slate-100 mb-8">
+                    <div class="flex justify-between font-bold text-slate-500 text-xs uppercase"><span>Pharmacy Bill</span><span id="resMed">₹0</span></div>
+                    <div class="flex justify-between font-bold text-slate-500 text-xs uppercase"><span>Delivery</span><span>₹25</span></div>
+                    <div class="flex justify-between font-bold text-emerald-500 text-xs uppercase"><span>Advance Paid</span><span>-₹50</span></div>
+                    <hr class="border-dashed border-slate-200">
+                    <div class="flex justify-between font-black text-indigo-600 text-2xl"><span>Total Due</span><span id="resTotal">₹0</span></div>
+                </div>
+                <a id="finalUpiBtn" href="#" class="upi-btn w-full text-white py-5 rounded-2xl font-black uppercase text-xs text-center block shadow-lg">Pay Remaining Balance</a>
             </div>
         </div>
     </main>
 
+    <div id="zoomOverlay" class="hidden fixed inset-0 z-[1000] flex flex-col">
+        <div class="p-6 flex justify-end"><button onclick="closeZoom()" class="bg-white/10 text-white w-12 h-12 rounded-full font-black text-xl">✕</button></div>
+        <div class="zoom-img-container"><img id="zoomedImg" src="" class="max-w-full max-h-full object-contain"></div>
+    </div>
+
     <script>
-        const WA = "919385352585";
-        const CLOUD = "du14a1qmh";
-        const PRESET = "msd_live";
-        let clickCount = 0;
+        const CLOUD_NAME = "du14a1qmh";
+        const UPLOAD_PRESET = "msd_live";
+        const PARTNER_WA = "919385352585";
+        const MY_UPI = "9385352585@ybl";
 
-        // Hidden Console Trigger
-        function enableBoyMode() {
-            clickCount++;
-            if(clickCount >= 5) {
-                document.getElementById('boyConsole').style.display = 'block';
-                document.getElementById('boyConsole').scrollIntoView({behavior:'smooth'});
-                alert("Delivery Mode Active");
-            }
-        }
-
-        function validate() {
-            const n = document.getElementById('custName').value;
-            const p = document.getElementById('custPhone').value;
+        function validateForm() {
+            const n = document.getElementById('pName').value.trim();
+            const p = document.getElementById('pPhone').value.trim();
             const f = document.getElementById('fileIn').files;
-            if(f.length > 0) document.getElementById('fileLabel').innerText = "✅ " + f.length + " Files Ready";
-            if(n.length > 2 && p.length === 10 && f.length > 0) document.getElementById('payArea').classList.remove('hidden');
+            if(n.length >= 3 && p.length === 10 && f.length > 0) document.getElementById('paySection').classList.remove('hidden');
         }
 
-        function checkProof() {
-            if(document.getElementById('proofIn').files.length > 0) {
-                document.getElementById('proofLabel').innerText = "✅ Proof Attached";
-                document.getElementById('finalBtn').style.display = 'block';
+        function unlockDispatch() {
+            if(document.getElementById('payProofIn').files.length > 0) {
+                document.getElementById('proofStatus').innerText = "✅ Proof Uploaded";
+                document.getElementById('mainBtn').style.display = 'block';
             }
         }
 
-        async function handleOrder() {
-            const btn = document.getElementById('finalBtn');
-            btn.innerText = "UPLOADING..."; btn.disabled = true;
+        async function sendOrder() {
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "VERIFYING..."; btn.disabled = true;
             try {
-                const presc = [...document.getElementById('fileIn').files];
-                const proof = document.getElementById('proofIn').files[0];
+                const files = [...document.getElementById('fileIn').files];
+                const proof = document.getElementById('payProofIn').files[0];
                 let urls = [];
-                for(let f of [proof, ...presc]) {
+                const allFiles = [proof, ...files];
+                for(let f of allFiles) {
                     const fd = new FormData();
-                    fd.append('file', f); fd.append('upload_preset', PRESET);
-                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {method:'POST', body:fd});
+                    fd.append('file', f); fd.append('upload_preset', UPLOAD_PRESET);
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
                     const d = await res.json(); urls.push(d.secure_url);
                 }
-                let msg = `*NEW DISPATCH*%0A*Patient:* ${document.getElementById('custName').value}%0A*WhatsApp:* ${document.getElementById('custPhone').value}%0A%0A*Proof:* ${urls[0]}%0A%0A*Prescriptions:*%0A`;
-                urls.slice(1).forEach((url, i) => msg += `Pic ${i+1}: ${url}%0A`);
-                window.location.href = `https://wa.me/${WA}?text=${msg}`;
-            } catch(e) { alert("Upload Failed"); btn.innerText = "Confirm Order"; btn.disabled = false; }
+                const obj = { n: document.getElementById('pName').value, p: document.getElementById('pPhone').value, u: urls };
+                const enc = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+                window.location.href = `https://wa.me/${PARTNER_WA}?text=*ADVANCE PAID ORDER*%0A${window.location.origin}${window.location.pathname}?order=${enc}`;
+            } catch (e) { alert("Upload Failed!"); btn.disabled = false; }
         }
 
-        function calc() {
-            const mp = parseFloat(document.getElementById('medPrice').value) || 0;
-            const d = parseFloat(document.getElementById('dist').value) || 0;
-            let fee = d > 0 ? 25 : 0;
-            if(d > 3) fee += (d-3) * 10;
-            document.getElementById('dFee').innerText = "₹" + fee;
-            document.getElementById('tBill').innerText = "₹" + (mp + fee);
-        }
+        window.onload = () => {
+            const p = new URLSearchParams(window.location.search);
+            const order = p.get('order');
+            const receipt = p.get('receipt');
 
-        function sendBill() {
-            const bill = document.getElementById('tBill').innerText;
-            const phone = document.getElementById('custPhone').value;
-            if(!phone || bill === "₹0") return alert("Data Missing");
-            const text = `*MSD PHARMA - FINAL BILL*%0A*Total Bill: ${bill}*%0A_Medicines are checked and dispatched!_`;
-            window.location.href = `https://wa.me/91${phone}?text=${text}`;
+            if(order) {
+                document.getElementById('customerView').classList.add('hidden');
+                document.getElementById('partnerView').classList.remove('hidden');
+                const d = JSON.parse(decodeURIComponent(escape(atob(order))));
+                document.getElementById('orderTitle').innerText = d.n;
+                d.u.forEach((url, i) => {
+                    const label = i === 0 ? "PAYMENT PROOF" : "PRESCRIPTION";
+                    const div = document.createElement('div');
+                    div.className = `aspect-[3/4] rounded-2xl overflow-hidden border-2 ${i===0?'border-emerald-400':'border-slate-100'} relative bg-slate-100`;
+                    div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onclick="openZoom('${url}')"><span class="absolute top-2 left-2 bg-black/50 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase">${label}</span>`;
+                    document.getElementById('partnerGallery').appendChild(div);
+                });
+            }
+
+            if(receipt) {
+                document.getElementById('customerView').classList.add('hidden');
+                document.getElementById('receiptView').classList.remove('hidden');
+                const d = JSON.parse(decodeURIComponent(escape(atob(receipt))));
+                const due = (parseFloat(d.m) + 25 - 50);
+                document.getElementById('resMed').innerText = "₹" + d.m;
+                document.getElementById('resTotal').innerText = "₹" + (due < 0 ? 0 : due);
+                document.getElementById('finalUpiBtn').href = `upi://pay?pa=${MY_UPI}&pn=MSD_Pharma&am=${due}&cu=INR`;
+            }
+        };
+
+        function openZoom(url) { document.getElementById('zoomedImg').src = url; document.getElementById('zoomOverlay').classList.remove('hidden'); }
+        function closeZoom() { document.getElementById('zoomOverlay').classList.add('hidden'); }
+
+        function completeAndNotify() {
+            const m = document.getElementById('billPrice').value;
+            const p = new URLSearchParams(window.location.search);
+            if(!m) return alert("Enter Amount");
+            const d = JSON.parse(decodeURIComponent(escape(atob(p.get('order')))));
+            const billObj = { m: m, n: d.n };
+            const enc = btoa(unescape(encodeURIComponent(JSON.stringify(billObj))));
+            const link = `${window.location.origin}${window.location.pathname}?receipt=${enc}`;
+            window.location.href = `https://wa.me/${d.p}?text=*MSD VERIFIED BILL*%0ADue: ₹${parseFloat(m)+25-50}%0APay Balance: ${link}`;
         }
     </script>
 </body>
