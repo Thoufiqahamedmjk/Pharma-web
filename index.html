@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MSD PRO | Erode Pharmacy Logistics</title>
+    <title>MSD PRO | Erode Pharmacy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; }
         .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
         .card { background: white; border-radius: 2.5rem; box-shadow: 0 15px 40px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
-        .history-item { border-left: 4px solid #6366f1; transition: all 0.2s; }
-        .history-item:active { transform: scale(0.98); background: #f1f5f9; }
+        .pulse-notify { animation: shadow-pulse 2s infinite; }
+        @keyframes shadow-pulse { 0% { box-shadow: 0 0 0 0px rgba(16, 185, 129, 0.4); } 100% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); } }
     </style>
 </head>
 <body class="min-h-screen">
@@ -19,62 +19,59 @@
     <nav class="fixed top-0 w-full z-50 glass-nav px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-2">
             <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">M</div>
-            <span class="font-extrabold tracking-tighter text-slate-900 text-lg uppercase">MSD <span class="text-indigo-600">Pro</span></span>
+            <span class="font-extrabold tracking-tighter text-slate-900 text-lg uppercase">MSD <span class="text-indigo-600 font-medium">Pro</span></span>
         </div>
-        <button onclick="toggleHistory()" class="bg-slate-100 p-2.5 rounded-xl text-slate-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </button>
+        <div id="notifBadge" onclick="showFinalBill()" class="hidden bg-emerald-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase cursor-pointer pulse-notify">
+            Bill Ready!
+        </div>
     </nav>
 
     <main class="max-w-md mx-auto px-6 pt-24 pb-12">
         
         <div id="customerView" class="space-y-6">
-            <div class="card p-8 text-center">
-                <h1 class="text-3xl font-black text-slate-900 mb-2 tracking-tight">Erode Pharma</h1>
-                <p class="text-slate-400 text-sm mb-8 font-medium italic">Upload prescription for 30-min delivery.</p>
+            <div class="card p-8">
+                <h1 class="text-3xl font-black text-slate-900 mb-2 tracking-tight">Order Now</h1>
+                <p class="text-slate-400 text-sm mb-8 font-medium italic">Prescription to Delivery in 30 mins.</p>
                 
-                <div class="space-y-4 text-left">
-                    <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all">
+                <div class="space-y-4">
+                    <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold text-slate-700 outline-none">
+                    <input type="tel" id="pPhone" placeholder="Patient WhatsApp Number" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold text-slate-700 outline-none">
                     
-                    <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-[2rem] py-12 bg-slate-50/50 cursor-pointer hover:bg-indigo-50/30 transition-all">
-                        <div id="uploadIcon" class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
+                    <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-[2rem] py-12 bg-slate-50/50 text-center cursor-pointer hover:bg-indigo-50/30 transition-all">
                         <span id="fileCount" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Select Prescription(s)</span>
-                        <input type="file" id="fileIn" multiple class="hidden" onchange="handleFileChange()">
+                        <input type="file" id="fileIn" multiple class="hidden" onchange="document.getElementById('fileCount').innerText = this.files.length + ' Images Ready'">
                     </div>
                 </div>
 
-                <button onclick="sendOrder()" id="mainBtn" class="w-full mt-10 bg-indigo-600 text-white py-5 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-indigo-100 active:scale-95 transition-all">Dispatch Now</button>
+                <button onclick="sendOrder()" id="mainBtn" class="w-full mt-10 bg-indigo-600 text-white py-5 rounded-[2rem] font-black uppercase text-xs tracking-[0.2em] shadow-xl transition-all">Dispatch Now</button>
             </div>
         </div>
 
         <div id="partnerView" class="hidden space-y-6">
             <div class="card p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-black text-slate-900 italic" id="orderTitle">Order Details</h2>
-                    <span class="bg-indigo-600 text-white text-[10px] px-3 py-1 rounded-full font-bold">ACTIVE</span>
-                </div>
-
-                <div id="partnerGallery" class="grid grid-cols-2 gap-4 mb-8">
-                    </div>
-
-                <div class="space-y-3">
-                    <input type="number" id="billPrice" placeholder="Enter Pharmacy Total (₹)" class="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold text-lg outline-none focus:ring-4 focus:ring-emerald-500/10">
-                    <button onclick="completeOrder()" class="w-full py-5 bg-emerald-500 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-emerald-100 active:scale-95 transition-all">Submit Bill & Close</button>
-                </div>
+                <h2 class="text-xl font-black text-slate-900 mb-6" id="orderTitle">Order</h2>
+                <div id="partnerGallery" class="grid grid-cols-2 gap-4 mb-8"></div>
+                
+                <input type="number" id="billPrice" placeholder="Enter Amount (₹)" class="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold text-lg mb-4">
+                <button onclick="completeAndNotify()" class="w-full py-5 bg-emerald-500 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl">Submit & Notify Patient</button>
             </div>
-        </div>
-
-        <div id="historyView" class="hidden space-y-6 animate-in slide-in-from-bottom duration-300">
-            <h2 class="text-2xl font-black text-slate-900 mb-6">Past Deliveries</h2>
-            <div id="historyList" class="space-y-4">
-                </div>
         </div>
     </main>
 
-    <div id="zoomModal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4" onclick="this.classList.add('hidden')">
-        <img id="zoomImg" class="max-w-full max-h-full rounded-2xl" src="">
+    <div id="billModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/80 backdrop-blur-sm">
+        <div class="bg-white w-full rounded-[3rem] p-8 text-center shadow-2xl scale-in">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Bill is Ready!</h3>
+            <div class="bg-slate-50 rounded-3xl p-6 my-6 space-y-3">
+                <div class="flex justify-between font-bold text-slate-400 text-xs"><span>Medicine Cost</span><span id="mCost">₹0</span></div>
+                <div class="flex justify-between font-bold text-slate-400 text-xs"><span>Delivery Fee</span><span>₹25</span></div>
+                <hr class="border-dashed border-slate-200">
+                <div class="flex justify-between font-black text-indigo-600 text-xl"><span>Total</span><span id="mTotal">₹0</span></div>
+            </div>
+            <button onclick="this.closest('#billModal').classList.add('hidden')" class="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold uppercase text-xs">Close</button>
+        </div>
     </div>
 
     <script>
@@ -82,18 +79,13 @@
         const UPLOAD_PRESET = "msd_live";
         const PARTNER_WA = "919385352585";
 
-        function handleFileChange() {
-            const count = document.getElementById('fileIn').files.length;
-            document.getElementById('fileCount').innerText = count + " Images Ready";
-            document.getElementById('fileCount').classList.add('text-indigo-600');
-        }
-
         async function sendOrder() {
             const name = document.getElementById('pName').value;
+            const phone = document.getElementById('pPhone').value;
             const files = document.getElementById('fileIn').files;
-            const btn = document.getElementById('mainBtn');
+            if(!name || !phone || files.length === 0) return alert("Fill all details!");
 
-            if(!name || files.length === 0) return alert("Missing Info!");
+            const btn = document.getElementById('mainBtn');
             btn.innerText = "UPLOADING..."; btn.disabled = true;
 
             try {
@@ -106,92 +98,68 @@
                     urls.push(data.secure_url);
                 }
 
-                // Bridge data to delivery boy using a persistent ID
                 const orderID = "MSD-" + Date.now();
-                const orderData = { name, urls, status: 'Active', date: new Date().toLocaleDateString() };
+                const orderData = { name, phone, urls, status: 'Pending' };
                 localStorage.setItem(orderID, JSON.stringify(orderData));
+                localStorage.setItem('current_active_order', orderID);
 
                 const link = `${window.location.origin}${window.location.pathname}?id=${orderID}`;
-                const msg = `*--- NEW MSD ORDER ---*%0A*ID:* ${orderID}%0A*Patient:* ${name}%0A%0A*VIEW DASHBOARD:*%0A${link}`;
+                const msg = `*--- NEW ORDER ---*%0A*ID:* ${orderID}%0A*Patient:* ${name}%0A*Phone:* ${phone}%0A%0A*DASHBOARD:*%0A${link}`;
                 window.location.href = `https://wa.me/${PARTNER_WA}?text=${msg}`;
-            } catch (e) {
-                alert("Upload Error"); btn.disabled = false;
-            }
+            } catch (e) { alert("Error!"); btn.disabled = false; }
         }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            const orderID = params.get('id');
-            
-            if(orderID) {
+            const id = params.get('id');
+            const activeID = localStorage.getItem('current_active_order');
+
+            // 1. Partner Dashboard Logic
+            if(id) {
                 document.getElementById('customerView').classList.add('hidden');
                 document.getElementById('partnerView').classList.remove('hidden');
-                
-                const data = JSON.parse(localStorage.getItem(orderID));
+                const data = JSON.parse(localStorage.getItem(id));
                 if(data) {
                     document.getElementById('orderTitle').innerText = data.name;
-                    const gallery = document.getElementById('partnerGallery');
                     data.urls.forEach(url => {
-                        const div = document.createElement('div');
-                        div.className = "aspect-square rounded-2xl overflow-hidden border border-slate-100 bg-slate-50";
-                        div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onclick="zoom('${url}')">`;
-                        gallery.appendChild(div);
+                        const img = `<div class='aspect-square rounded-2xl overflow-hidden border border-slate-100'><img src='${url}' class='w-full h-full object-cover'></div>`;
+                        document.getElementById('partnerGallery').innerHTML += img;
                     });
                 }
             }
-            renderHistory();
+
+            // 2. Customer Notification Check
+            if(activeID) {
+                const data = JSON.parse(localStorage.getItem(activeID));
+                if(data.status === 'Completed') {
+                    document.getElementById('notifBadge').classList.remove('hidden');
+                    showFinalBill(data);
+                }
+            }
         };
 
-        function zoom(url) {
-            document.getElementById('zoomImg').src = url;
-            document.getElementById('zoomModal').classList.remove('hidden');
-        }
-
-        function completeOrder() {
+        function completeAndNotify() {
             const price = document.getElementById('billPrice').value;
-            const params = new URLSearchParams(window.location.search);
-            const orderID = params.get('id');
-
+            const id = new URLSearchParams(window.location.search).get('id');
             if(!price) return alert("Enter price");
 
-            let data = JSON.parse(localStorage.getItem(orderID));
+            let data = JSON.parse(localStorage.getItem(id));
             data.status = 'Completed';
+            data.medCost = price;
             data.total = parseFloat(price) + 25;
-            
-            // Save to history
-            let history = JSON.parse(localStorage.getItem('msd_history') || "[]");
-            history.unshift(data);
-            localStorage.setItem('msd_history', JSON.stringify(history));
-            
-            alert("Order Completed! Bill: ₹" + data.total);
-            window.location.href = window.location.origin + window.location.pathname;
+            localStorage.setItem(id, JSON.stringify(data));
+
+            // NOTIFICATION: Trigger WhatsApp alert back to customer
+            const customerMsg = `*HELLO ${data.name.toUpperCase()}!*%0AYour MSD Pharma bill is ready.%0A%0A*Total Amount:* ₹${data.total}%0A%0A*View Receipt:* ${window.location.origin}${window.location.pathname}`;
+            window.location.href = `https://wa.me/${data.phone}?text=${customerMsg}`;
         }
 
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('msd_history') || "[]");
-            const list = document.getElementById('historyList');
-            list.innerHTML = history.length ? "" : "<p class='text-slate-400 text-center py-20 font-bold'>No past orders yet.</p>";
-            
-            history.forEach(order => {
-                const div = document.createElement('div');
-                div.className = "card p-5 history-item flex justify-between items-center";
-                div.innerHTML = `
-                    <div>
-                        <p class="font-black text-slate-900 text-sm">${order.name}</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase">${order.date}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-indigo-600 font-black text-lg">₹${order.total}</p>
-                        <p class="text-[8px] text-emerald-500 font-black uppercase">Paid</p>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function toggleHistory() {
-            document.getElementById('customerView').classList.toggle('hidden');
-            document.getElementById('historyView').classList.toggle('hidden');
+        function showFinalBill(preData) {
+            const id = localStorage.getItem('current_active_order');
+            const data = preData || JSON.parse(localStorage.getItem(id));
+            document.getElementById('mCost').innerText = "₹" + data.medCost;
+            document.getElementById('mTotal').innerText = "₹" + data.total;
+            document.getElementById('billModal').classList.remove('hidden');
         }
     </script>
 </body>
