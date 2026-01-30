@@ -36,17 +36,20 @@
                     <input type="tel" id="pPhone" oninput="validateForm()" maxlength="10" placeholder="10 Digit WhatsApp No" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
                     
                     <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-[2rem] py-6 bg-slate-50 text-center cursor-pointer">
-                        <span id="fileCount" class="text-[10px] font-black text-slate-400 uppercase">1. Attach Prescription</span>
+                        <span id="fileCount" class="text-[10px] font-black text-slate-400 uppercase font-bold">1. Attach Prescription</span>
                         <input type="file" id="fileIn" multiple class="hidden" onchange="validateForm()">
                     </div>
 
                     <div id="paySection" class="hidden p-6 bg-indigo-50 rounded-3xl border border-indigo-100">
-                        <p class="text-[10px] font-black text-indigo-400 uppercase mb-2">2. Pay Advance</p>
-                        <a href="upi://pay?pa=9385352585@ybl&pn=MSD_Pharma&am=50&cu=INR" class="upi-btn w-full text-white py-4 rounded-2xl font-black text-xs text-center block shadow-lg">Pay ₹50 via UPI</a>
-                        <div class="mt-6 pt-6 border-t border-indigo-200">
-                            <p class="text-[10px] font-black text-indigo-600 uppercase mb-3 text-center">3. Upload Screenshot</p>
+                        <p class="text-[10px] font-black text-indigo-400 uppercase mb-4 text-center">2. Scan QR & Pay ₹50 Advance</p>
+                        <div class="bg-white p-3 rounded-2xl shadow-sm mb-4">
+                            <img src="qr.jpg" alt="Payment QR" class="w-full h-auto rounded-xl">
+                        </div>
+                        
+                        <div class="mt-4 pt-6 border-t border-indigo-200">
+                            <p class="text-[10px] font-black text-indigo-600 uppercase mb-3 text-center">3. Upload Payment Screenshot</p>
                             <div onclick="document.getElementById('payProofIn').click()" class="border-2 border-indigo-300 border-dashed rounded-2xl py-4 bg-white text-center cursor-pointer">
-                                <span id="proofStatus" class="text-[10px] font-black text-indigo-400 uppercase">Upload Payment Proof</span>
+                                <span id="proofStatus" class="text-[10px] font-black text-indigo-400 uppercase">Click to Upload Proof</span>
                                 <input type="file" id="payProofIn" class="hidden" onchange="unlockDispatch()">
                             </div>
                         </div>
@@ -69,19 +72,22 @@
 
                 <div id="partnerGallery" class="grid grid-cols-2 gap-3 mb-8"></div>
                 
-                <div class="p-5 bg-slate-50 rounded-3xl border border-slate-100 mb-6">
-                    <p class="text-[10px] font-black text-slate-400 uppercase mb-3">Acknowledgement</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                        </div>
-                        <p class="text-xs font-bold text-slate-600 leading-tight">Advance Payment Screenshot Received & Verified</p>
-                    </div>
-                </div>
-
                 <div class="space-y-4">
-                    <input type="number" id="billPrice" placeholder="Medicine Amount (₹)" class="w-full p-5 rounded-2xl bg-slate-50 border-none font-bold text-lg outline-none">
-                    <button onclick="completeAndNotify()" class="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest">Send Final Bill</button>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Medicine Amount (₹)</label>
+                        <input type="number" id="billPrice" oninput="calcFinal()" placeholder="0.00" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-slate-400 uppercase ml-2">Distance (KM)</label>
+                        <input type="number" id="distKM" oninput="calcFinal()" placeholder="e.g. 5" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
+                    </div>
+
+                    <div class="p-5 bg-slate-900 text-white rounded-3xl space-y-2">
+                        <div class="flex justify-between text-[10px] font-bold opacity-60 uppercase"><span>Delivery Fee</span><span id="calcDel">₹0</span></div>
+                        <div class="flex justify-between font-black text-lg"><span>Net Payable</span><span id="calcTotal">₹0</span></div>
+                    </div>
+
+                    <button onclick="completeAndNotify()" class="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest">Send Final Bill to Client</button>
                 </div>
             </div>
         </div>
@@ -91,31 +97,34 @@
                 <h2 class="text-2xl font-black text-slate-900 text-center mb-8 italic">Verified Receipt</h2>
                 <div class="bg-slate-50 rounded-3xl p-6 space-y-4 border border-slate-100 mb-8">
                     <div class="flex justify-between font-bold text-slate-500 text-xs uppercase"><span>Pharmacy Bill</span><span id="resMed">₹0</span></div>
-                    <div class="flex justify-between font-bold text-slate-500 text-xs uppercase"><span>Delivery</span><span>₹25</span></div>
+                    <div class="flex justify-between font-bold text-slate-500 text-xs uppercase"><span>Delivery Fee</span><span id="resDel">₹0</span></div>
                     <div class="flex justify-between font-bold text-emerald-500 text-xs uppercase"><span>Advance Paid</span><span>-₹50</span></div>
                     <hr class="border-dashed border-slate-200">
                     <div class="flex justify-between font-black text-indigo-600 text-2xl"><span>Total Due</span><span id="resTotal">₹0</span></div>
                 </div>
-                <a id="finalUpiBtn" href="#" class="upi-btn w-full text-white py-5 rounded-2xl font-black uppercase text-xs text-center block shadow-lg">Pay Remaining Balance</a>
+                <div class="p-6 bg-indigo-50 rounded-3xl border border-indigo-100 text-center mb-6">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase mb-3">Scan to Pay Balance</p>
+                    <img src="qr.jpg" class="w-40 h-40 mx-auto rounded-xl">
+                </div>
             </div>
         </div>
     </main>
 
     <div id="zoomOverlay" class="hidden fixed inset-0 z-[1000] flex flex-col">
         <div class="p-6 flex justify-end"><button onclick="closeZoom()" class="bg-white/10 text-white w-12 h-12 rounded-full font-black text-xl">✕</button></div>
-        <div class="zoom-img-container"><img id="zoomedImg" src="" class="max-w-full max-h-full object-contain"></div>
+        <div class="zoom-img-container"><img id="zoomedImg" src="" class="max-w-full max-h-full object-contain shadow-2xl"></div>
     </div>
 
     <script>
         const CLOUD_NAME = "du14a1qmh";
         const UPLOAD_PRESET = "msd_live";
         const PARTNER_WA = "919385352585";
-        const MY_UPI = "9385352585@ybl";
 
         function validateForm() {
             const n = document.getElementById('pName').value.trim();
             const p = document.getElementById('pPhone').value.trim();
             const f = document.getElementById('fileIn').files;
+            if(f.length > 0) document.getElementById('fileCount').innerText = "✅ " + f.length + " Files Attached";
             if(n.length >= 3 && p.length === 10 && f.length > 0) document.getElementById('paySection').classList.remove('hidden');
         }
 
@@ -128,22 +137,29 @@
 
         async function sendOrder() {
             const btn = document.getElementById('mainBtn');
-            btn.innerText = "VERIFYING..."; btn.disabled = true;
+            btn.innerText = "UPLOADING..."; btn.disabled = true;
             try {
                 const files = [...document.getElementById('fileIn').files];
                 const proof = document.getElementById('payProofIn').files[0];
                 let urls = [];
-                const allFiles = [proof, ...files];
-                for(let f of allFiles) {
-                    const fd = new FormData();
-                    fd.append('file', f); fd.append('upload_preset', UPLOAD_PRESET);
+                for(let f of [proof, ...files]) {
+                    const fd = new FormData(); fd.append('file', f); fd.append('upload_preset', UPLOAD_PRESET);
                     const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
                     const d = await res.json(); urls.push(d.secure_url);
                 }
                 const obj = { n: document.getElementById('pName').value, p: document.getElementById('pPhone').value, u: urls };
                 const enc = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
-                window.location.href = `https://wa.me/${PARTNER_WA}?text=*ADVANCE PAID ORDER*%0A${window.location.origin}${window.location.pathname}?order=${enc}`;
+                window.location.href = `https://wa.me/${PARTNER_WA}?text=*ORDER RECEIVED*%0A${window.location.origin}${window.location.pathname}?order=${enc}`;
             } catch (e) { alert("Upload Failed!"); btn.disabled = false; }
+        }
+
+        function calcFinal() {
+            const m = parseFloat(document.getElementById('billPrice').value) || 0;
+            const d = parseFloat(document.getElementById('distKM').value) || 0;
+            let fee = d > 0 ? 25 : 0;
+            if(d > 3) fee += (d - 3) * 10;
+            document.getElementById('calcDel').innerText = "₹" + fee;
+            document.getElementById('calcTotal').innerText = "₹" + (m + fee - 50);
         }
 
         window.onload = () => {
@@ -160,7 +176,7 @@
                     const label = i === 0 ? "PAYMENT PROOF" : "PRESCRIPTION";
                     const div = document.createElement('div');
                     div.className = `aspect-[3/4] rounded-2xl overflow-hidden border-2 ${i===0?'border-emerald-400':'border-slate-100'} relative bg-slate-100`;
-                    div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onclick="openZoom('${url}')"><span class="absolute top-2 left-2 bg-black/50 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase">${label}</span>`;
+                    div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onclick="openZoom('${url}')"><span class="absolute bottom-2 left-2 bg-black/50 text-white text-[7px] font-black px-2 py-0.5 rounded uppercase">${label}</span>`;
                     document.getElementById('partnerGallery').appendChild(div);
                 });
             }
@@ -168,11 +184,10 @@
             if(receipt) {
                 document.getElementById('customerView').classList.add('hidden');
                 document.getElementById('receiptView').classList.remove('hidden');
-                const d = JSON.parse(decodeURIComponent(escape(atob(receipt))));
-                const due = (parseFloat(d.m) + 25 - 50);
-                document.getElementById('resMed').innerText = "₹" + d.m;
-                document.getElementById('resTotal').innerText = "₹" + (due < 0 ? 0 : due);
-                document.getElementById('finalUpiBtn').href = `upi://pay?pa=${MY_UPI}&pn=MSD_Pharma&am=${due}&cu=INR`;
+                const r = JSON.parse(decodeURIComponent(escape(atob(receipt))));
+                document.getElementById('resMed').innerText = "₹" + r.m;
+                document.getElementById('resDel').innerText = "₹" + r.d;
+                document.getElementById('resTotal').innerText = "₹" + (parseFloat(r.m) + parseFloat(r.d) - 50);
             }
         };
 
@@ -181,13 +196,18 @@
 
         function completeAndNotify() {
             const m = document.getElementById('billPrice').value;
+            const dist = document.getElementById('distKM').value;
+            if(!m || !dist) return alert("Fill Details");
             const p = new URLSearchParams(window.location.search);
-            if(!m) return alert("Enter Amount");
             const d = JSON.parse(decodeURIComponent(escape(atob(p.get('order')))));
-            const billObj = { m: m, n: d.n };
+            
+            let fee = parseFloat(dist) > 0 ? 25 : 0;
+            if(parseFloat(dist) > 3) fee += (parseFloat(dist) - 3) * 10;
+
+            const billObj = { m: m, d: fee, n: d.n };
             const enc = btoa(unescape(encodeURIComponent(JSON.stringify(billObj))));
             const link = `${window.location.origin}${window.location.pathname}?receipt=${enc}`;
-            window.location.href = `https://wa.me/${d.p}?text=*MSD VERIFIED BILL*%0ADue: ₹${parseFloat(m)+25-50}%0APay Balance: ${link}`;
+            window.location.href = `https://wa.me/${d.p}?text=*MSD VERIFIED RECEIPT*%0ATotal Due: ₹${parseFloat(m)+fee-50}%0AView Bill: ${link}`;
         }
     </script>
 </body>
