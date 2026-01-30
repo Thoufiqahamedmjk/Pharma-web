@@ -16,56 +16,103 @@
     <header class="w-full max-w-md flex justify-between items-center py-6">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-purple-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">M</div>
-            <h1 class="text-xs font-black text-purple-950 uppercase tracking-tight">E-PHARM-MSD</h1>
+            <h1 class="text-xs font-black text-purple-950 uppercase">E-PHARM-MSD</h1>
         </div>
-        <div class="text-[8px] font-black text-green-500 uppercase border border-green-200 px-3 py-1 rounded-full bg-green-50">Online</div>
+        <div id="priceBadge" class="hidden text-[10px] font-black text-white bg-green-500 px-4 py-1 rounded-full">
+            TOTAL: ₹<span id="displayTotal">0</span>
+        </div>
     </header>
 
     <main class="w-full max-w-md space-y-4">
-        <div class="msd-card p-8">
-            <h2 class="text-lg font-black text-purple-900 mb-6 italic">Digital Prescription Counter</h2>
-            
+        
+        <div id="customerView" class="msd-card p-8">
+            <h2 class="text-lg font-black text-purple-900 mb-6 italic text-center uppercase tracking-tighter underline decoration-purple-200">New Order</h2>
             <div class="space-y-4">
-                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
-                <input type="text" id="pAge" placeholder="Age" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
-                
-                <button onclick="getLoc()" id="locBtn" class="w-full py-3 bg-purple-50 text-purple-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-purple-100">
-                    📍 Verify Delivery Distance
-                </button>
-                <p id="distDisplay" class="text-center text-[10px] font-bold text-gray-400"></p>
+                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-none">
+                <div class="p-4 border-2 border-dashed border-purple-100 rounded-2xl text-center bg-purple-50/20">
+                    <p class="text-[9px] font-black text-purple-300 uppercase mb-2">Prescription Photo</p>
+                    <input type="file" id="photoIn" accept="image/*" class="text-[10px] font-bold text-gray-400">
+                </div>
+                <div class="flex justify-between items-center bg-purple-50 p-4 rounded-xl">
+                    <span class="text-[10px] font-bold uppercase text-purple-400 italic">MSD Delivery Fee</span>
+                    <span class="text-xs font-black text-purple-700">₹25.00</span>
+                </div>
             </div>
-
-            <button onclick="sendOrder()" class="w-full mt-8 bg-purple-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl transition active:scale-95">
-                Confirm & Open WhatsApp
+            <button onclick="uploadToCloud()" id="mainBtn" class="w-full mt-8 bg-purple-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
+                Dispatch Order
             </button>
+        </div>
+
+        <div id="partnerView" class="hidden msd-card p-8 bg-slate-900 text-white border-none">
+            <h2 class="text-lg font-black text-purple-400 mb-4 uppercase italic">Partner Hub</h2>
+            <p class="text-[10px] text-gray-400 mb-6 font-bold uppercase tracking-widest">Pricing Console</p>
+            <input type="number" id="medPrice" placeholder="Medicine Amount (₹)" class="w-full p-4 bg-slate-800 rounded-2xl font-bold outline-none text-white mb-4 border-none">
+            <button onclick="calculateFinalBill()" class="w-full py-4 bg-green-500 rounded-2xl font-black uppercase text-sm">Update Total Bill</button>
         </div>
     </main>
 
     <script>
-        let userDist = "Unknown distance";
+        // CONFIGURATION
+        const CLOUD_NAME = "du14a1qmh"; 
+        const UPLOAD_PRESET = "PASTE_YOUR_PRESET_NAME_HERE"; // <--- Add your preset here
+        const PARTNER_WA = "919385352585";
+        const DELIVERY_FEE = 25;
 
-        function getLoc() {
-            const btn = document.getElementById('locBtn');
-            btn.innerText = "SENSING LOCATION...";
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    // Simulating distance from Erode Hub
-                    userDist = (Math.random() * 5 + 1).toFixed(1); 
-                    btn.innerText = "LOCATION VERIFIED";
-                    document.getElementById('distDisplay').innerText = `Approx. ${userDist} KM from Erode Hub`;
+        async function uploadToCloud() {
+            const name = document.getElementById('pName').value;
+            const file = document.getElementById('photoIn').files[0];
+            const btn = document.getElementById('mainBtn');
+
+            if(!name || !file) return alert("Please fill Name and Select a Photo!");
+
+            btn.innerText = "UPLOADING TO MSD CLOUD...";
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+
+            try {
+                const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData
                 });
+                const data = await resp.json();
+                const photoUrl = data.secure_url;
+
+                // Create the Partner URL
+                const partnerLink = window.location.href + "?partner=true";
+                
+                const message = `*MSD E-PHARM ORDER*%0A*Patient:* ${name}%0A*Prescription:* ${photoUrl}%0A------------------%0A*Action:* ${partnerLink}`;
+                
+                window.location.href = `https://wa.me/${PARTNER_WA}?text=${message}`;
+            } catch (e) {
+                alert("Upload failed! Make sure your Upload Preset is set to 'Unsigned'.");
+                btn.disabled = false;
+                btn.innerText = "Dispatch Order";
             }
         }
 
-        function sendOrder() {
-            const name = document.getElementById('pName').value;
-            const age = document.getElementById('pAge').value;
-            if(!name) return alert("Enter Name");
-
-            const wa = "919385352585";
-            const text = `*NEW MSD PHARMA ORDER*%0A*Name:* ${name}%0A*Age:* ${age}%0A*Distance:* ${userDist} KM%0A------------------------%0A_I am ready to upload my prescription photo._`;
+        function calculateFinalBill() {
+            const medCost = parseFloat(document.getElementById('medPrice').value) || 0;
+            const total = medCost + DELIVERY_FEE;
             
-            window.location.href = `https://wa.me/${wa}?text=${text}`;
+            localStorage.setItem('msd_order_total', total);
+            alert(`Total Bill Generated: ₹${total}. Amount is now visible to the customer.`);
+            window.location.search = ""; // Redirect back to customer view to see the badge
+        }
+
+        // Logic to switch views
+        if(window.location.search.includes('partner=true')) {
+            document.getElementById('customerView').classList.add('hidden');
+            document.getElementById('partnerView').classList.remove('hidden');
+        }
+
+        // Show total if it was set
+        const savedTotal = localStorage.getItem('msd_order_total');
+        if(savedTotal) {
+            document.getElementById('displayTotal').innerText = savedTotal;
+            document.getElementById('priceBadge').classList.remove('hidden');
         }
     </script>
 </body>
