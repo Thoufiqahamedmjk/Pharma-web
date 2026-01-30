@@ -2,71 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSD Pharma | Dispatch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>MSD PRO | Pharma Dispatch</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
-        .card { background: white; border-radius: 2.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.04); }
-        .upi-btn { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .card { background: white; border-radius: 2.5rem; box-shadow: 0 15px 40px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+        .upi-btn { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        #mainBtn { display: none; background: #0f172a; }
     </style>
 </head>
-<body class="min-h-screen pt-24 px-6">
+<body class="min-h-screen">
 
-    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-lg p-5 flex justify-between items-center z-50 border-b border-slate-100">
-        <span class="font-black text-slate-900 uppercase">MSD <span class="text-indigo-600">Pharma</span></span>
-        <div id="liveBadge" class="text-[9px] font-black bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full uppercase">Admin Active</div>
+    <nav class="fixed top-0 w-full z-50 glass-nav px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">M</div>
+            <span class="font-extrabold tracking-tighter text-slate-900 text-lg uppercase">MSD <span class="text-indigo-600 font-medium">Pro</span></span>
+        </div>
+        <div id="syncStatus" class="bg-emerald-100 text-emerald-700 text-[9px] font-black px-3 py-1 rounded-full uppercase italic">Connecting...</div>
     </nav>
 
-    <main class="max-w-md mx-auto space-y-6">
-        <div class="card p-8">
-            <div class="mb-8">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Dispatcher</p>
-                <h2 id="activeName" class="text-2xl font-black text-slate-900 uppercase">...</h2>
+    <main class="max-w-md mx-auto px-6 pt-24 pb-12">
+        <div class="card p-8 space-y-6">
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Active Partner</p>
+                <h2 id="activeBoyName" class="text-xl font-extrabold text-slate-900 uppercase italic">...</h2>
             </div>
 
             <div class="space-y-4">
-                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-slate-50 rounded-2xl border-none font-bold outline-none">
+                <input type="text" id="pName" oninput="validate()" placeholder="Patient Name" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
+                <input type="tel" id="pPhone" oninput="validate()" maxlength="10" placeholder="10 Digit WhatsApp" class="w-full p-4 rounded-2xl bg-slate-50 border-none font-bold outline-none">
                 
-                <div class="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 text-center">
-                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Booking Advance</p>
-                    <p class="text-3xl font-black text-slate-900 mb-4">₹50</p>
-                    <a id="payBtn" href="#" class="upi-btn block w-full text-white py-4 rounded-2xl font-black text-xs uppercase shadow-lg">Pay via UPI</a>
+                <div onclick="document.getElementById('fileIn').click()" class="border-2 border-dashed border-slate-200 rounded-[2rem] py-6 bg-slate-50 text-center cursor-pointer">
+                    <span id="fileTxt" class="text-[10px] font-black text-slate-400 uppercase">1. Attach Prescription</span>
+                    <input type="file" id="fileIn" multiple class="hidden" onchange="validate()">
                 </div>
 
-                <button onclick="sendWhatsApp()" class="w-full py-5 bg-slate-900 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl active:scale-95 transition-transform">
-                    Send Order to WhatsApp
-                </button>
+                <div id="paySection" class="hidden p-6 bg-indigo-50 rounded-[2.5rem] border border-indigo-100 space-y-4">
+                    <div class="text-center">
+                        <p class="text-[10px] font-black text-indigo-400 uppercase mb-1">Booking Advance</p>
+                        <p class="text-3xl font-black text-slate-900 mb-4">₹50</p>
+                        <a id="payLink" href="#" class="upi-btn w-full text-white py-4 rounded-2xl font-black text-xs uppercase block shadow-lg">Pay via UPI</a>
+                    </div>
+                    
+                    <div onclick="document.getElementById('proofIn').click()" class="border-2 border-indigo-200 border-dashed rounded-2xl py-4 bg-white text-center cursor-pointer">
+                        <span id="proofTxt" class="text-[10px] font-black text-indigo-500 uppercase">2. Upload Payment Proof</span>
+                        <input type="file" id="proofIn" class="hidden" onchange="unlockDispatch()">
+                    </div>
+                </div>
+
+                <button id="mainBtn" onclick="sendOrder()" class="w-full py-5 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl">Confirm & Dispatch</button>
             </div>
         </div>
     </main>
 
     <script>
-        // --- 1. DEFAULT SETTINGS ---
+        // --- 1. CORE CONFIGURATION ---
+        const CLOUD_NAME = "du14a1qmh";
+        const UPLOAD_PRESET = "msd_live";
+        
         let CURRENT_WA = "919385352585";
         let CURRENT_UPI = "9385352585@ybl";
-        let CURRENT_NAME = "Main Admin";
+        let CURRENT_NAME = "Admin Default";
 
-        // --- 2. AUTO-CALL SYNCHRONIZATION ---
-        (function autoReflectData() {
+        // --- 2. AUTO-CALL SYNC FEATURE ---
+        (function autoSync() {
             const params = new URLSearchParams(window.location.search);
             const sName = params.get('setName');
             const sWA = params.get('setPartner');
             const sUPI = params.get('setUpi');
 
-            // If a new link is clicked, update the memory (Synchronize)
             if (sWA && sUPI && sName) {
                 localStorage.setItem('sync_name', decodeURIComponent(sName));
                 localStorage.setItem('sync_wa', sWA);
                 localStorage.setItem('sync_upi', sUPI);
                 
-                // Instantly wipe URL to keep it confidential
+                // Hide data from URL bar immediately
                 window.history.replaceState({}, document.title, window.location.origin + window.location.pathname);
-                alert("Profile Synced: " + sName);
+                alert("Synchronized: " + decodeURIComponent(sName) + " is now active.");
             }
 
-            // Load currently active boy from phone memory
+            // Reflect the active memory
             const savedN = localStorage.getItem('sync_name');
             const savedW = localStorage.getItem('sync_wa');
             const savedU = localStorage.getItem('sync_upi');
@@ -75,19 +93,59 @@
             if (savedW) CURRENT_WA = savedW;
             if (savedU) CURRENT_UPI = savedU;
 
-            // Update UI with the Reflected Information
-            document.getElementById('activeName').innerText = CURRENT_NAME;
-            document.getElementById('liveBadge').innerText = "LIVE: " + CURRENT_NAME;
-            document.getElementById('payBtn').href = `upi://pay?pa=${CURRENT_UPI}&pn=MSD_Pharma&am=50&cu=INR`;
+            // Update UI Elements
+            document.getElementById('activeBoyName').innerText = CURRENT_NAME;
+            document.getElementById('syncStatus').innerText = "LIVE: " + CURRENT_NAME;
+            document.getElementById('payLink').href = `upi://pay?pa=${CURRENT_UPI}&pn=MSD_Pharma&am=50&cu=INR`;
         })();
 
-        // --- 3. SEND ORDER ---
-        function sendWhatsApp() {
-            const pName = document.getElementById('pName').value;
-            if(!pName) return alert("Enter Patient Name");
+        // --- 3. UI LOGIC ---
+        function validate() {
+            const n = document.getElementById('pName').value;
+            const p = document.getElementById('pPhone').value;
+            const f = document.getElementById('fileIn').files;
             
-            const text = `*NEW ORDER*%0APatient: ${pName}%0A%0A_Handled by Delivery Boy: ${CURRENT_NAME}_`;
-            window.location.href = `https://wa.me/${CURRENT_WA}?text=${text}`;
+            if(f.length > 0) document.getElementById('fileTxt').innerText = `✅ ${f.length} Files Attached`;
+            
+            if(n.length > 2 && p.length === 10 && f.length > 0) {
+                document.getElementById('paySection').classList.remove('hidden');
+            }
+        }
+
+        function unlockDispatch() {
+            const proof = document.getElementById('proofIn').files;
+            if(proof.length > 0) {
+                document.getElementById('proofTxt').innerText = "✅ Screenshot Attached";
+                document.getElementById('mainBtn').style.display = 'block';
+            }
+        }
+
+        // --- 4. ORDER DISPATCH ---
+        async function sendOrder() {
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "UPLOADING..."; btn.disabled = true;
+
+            try {
+                const files = [...document.getElementById('fileIn').files];
+                const proof = document.getElementById('proofIn').files[0];
+                let urls = [];
+
+                for(let f of [proof, ...files]) {
+                    const fd = new FormData();
+                    fd.append('file', f); fd.append('upload_preset', UPLOAD_PRESET);
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {method:'POST', body:fd});
+                    const d = await res.json(); urls.push(d.secure_url);
+                }
+
+                const obj = { n: document.getElementById('pName').value, p: document.getElementById('pPhone').value, u: urls };
+                const enc = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+                
+                // Routes to the currently reflected Delivery Boy's WhatsApp
+                window.location.href = `https://wa.me/${CURRENT_WA}?text=*ORDER*%0A${window.location.origin}${window.location.pathname}?order=${enc}`;
+            } catch (e) {
+                alert("Failed. Check Connection.");
+                btn.innerText = "Confirm Dispatch"; btn.disabled = false;
+            }
         }
     </script>
 </body>
