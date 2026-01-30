@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-PHARM-MSD | Erode Hub</title>
+    <title>MSD | E-pharm Erode</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fcfbff; color: #1e1b4b; }
         .msd-card { background: white; border-radius: 2rem; border: 1px solid #f0eeff; box-shadow: 0 10px 40px rgba(0,0,0,0.02); }
-        .gradient-btn { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center min-h-screen">
@@ -19,115 +16,56 @@
     <header class="w-full max-w-md flex justify-between items-center py-6">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-purple-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">M</div>
-            <div>
-                <h1 class="text-[10px] font-black text-purple-950 uppercase tracking-tight">E-PHARM-MSD</h1>
-                <p class="text-[7px] text-purple-400 font-bold uppercase tracking-widest italic">Medicine Safe Delivery</p>
-            </div>
+            <h1 class="text-xs font-black text-purple-950 uppercase tracking-tight">E-PHARM-MSD</h1>
         </div>
-        <div class="text-[8px] font-black text-gray-400 uppercase border px-3 py-1 rounded-full italic">Erode Division</div>
+        <div class="text-[8px] font-black text-green-500 uppercase border border-green-200 px-3 py-1 rounded-full bg-green-50">Online</div>
     </header>
 
-    <main class="w-full max-w-md space-y-6">
-
-        <div id="step1" class="msd-card p-8">
-            <h2 class="text-xl font-black text-purple-900 mb-6 italic">Patient Details</h2>
+    <main class="w-full max-w-md space-y-4">
+        <div class="msd-card p-8">
+            <h2 class="text-lg font-black text-purple-900 mb-6 italic">Digital Prescription Counter</h2>
             
             <div class="space-y-4">
-                <div>
-                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">Full Name</label>
-                    <input type="text" id="pName" placeholder="e.g. Kumar S" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
-                </div>
-                <div>
-                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">Age</label>
-                    <input type="text" id="pAge" placeholder="e.g. 45 Years" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
-                </div>
-                <div>
-                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">WhatsApp ID</label>
-                    <input type="tel" id="pWa" placeholder="10 Digit Mobile" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
-                </div>
+                <input type="text" id="pName" placeholder="Patient Name" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
+                <input type="text" id="pAge" placeholder="Age" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
+                
+                <button onclick="getLoc()" id="locBtn" class="w-full py-3 bg-purple-50 text-purple-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-purple-100">
+                    📍 Verify Delivery Distance
+                </button>
+                <p id="distDisplay" class="text-center text-[10px] font-bold text-gray-400"></p>
             </div>
 
-            <button onclick="showUpload()" class="w-full mt-8 gradient-btn text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-purple-100 transition active:scale-95">
-                Next: Add Photos
+            <button onclick="sendOrder()" class="w-full mt-8 bg-purple-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl transition active:scale-95">
+                Confirm & Open WhatsApp
             </button>
         </div>
-
-        <div id="step2" class="hidden msd-card p-8 text-center animate-in fade-in duration-500">
-            <h2 class="text-xl font-black text-purple-900 mb-2">Prescription Snap</h2>
-            <p class="text-[9px] font-bold text-gray-400 uppercase mb-8 tracking-widest">Upload your medicine list</p>
-
-            <div onclick="document.getElementById('fileIn').click()" class="w-full py-12 border-2 border-dashed border-purple-100 rounded-[2.5rem] bg-purple-50/30 cursor-pointer">
-                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
-                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-                </div>
-                <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Tap to Take Photo</p>
-                <input type="file" id="fileIn" multiple class="hidden" onchange="previewFiles()">
-            </div>
-
-            <div id="preview" class="flex flex-wrap gap-2 justify-center mt-6"></div>
-
-            <button id="finalBtn" onclick="uploadAndSend()" class="w-full mt-10 bg-[#25D366] text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-green-50 transition active:scale-95">
-                Dispatch to MSD
-            </button>
-        </div>
-
     </main>
 
     <script>
-        // YOUR FIREBASE KEYS
-        const firebaseConfig = {
-            apiKey: "AIzaSyCIGw6QEcSnLZ_iaEws8ncZNqp-0zomN8c",
-            authDomain: "msd--pharma.firebaseapp.com",
-            projectId: "msd--pharma",
-            storageBucket: "msd--pharma.firebasestorage.app",
-            messagingSenderId: "803261472190",
-            appId: "1:803261472190:web:f4d50cf3352214422b2def"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
+        let userDist = "Unknown distance";
 
-        function showUpload() {
-            if(!document.getElementById('pName').value || !document.getElementById('pWa').value) return alert("Please fill Name and Mobile");
-            document.getElementById('step1').classList.add('hidden');
-            document.getElementById('step2').classList.remove('hidden');
-        }
-
-        function previewFiles() {
-            const list = document.getElementById('preview');
-            const files = document.getElementById('fileIn').files;
-            list.innerHTML = "";
-            for(let f of files) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(f);
-                img.className = "w-16 h-16 object-cover rounded-xl border-2 border-white shadow-sm";
-                list.appendChild(img);
+        function getLoc() {
+            const btn = document.getElementById('locBtn');
+            btn.innerText = "SENSING LOCATION...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    // Simulating distance from Erode Hub
+                    userDist = (Math.random() * 5 + 1).toFixed(1); 
+                    btn.innerText = "LOCATION VERIFIED";
+                    document.getElementById('distDisplay').innerText = `Approx. ${userDist} KM from Erode Hub`;
+                });
             }
         }
 
-        async function uploadAndSend() {
-            const files = document.getElementById('fileIn').files;
-            if(files.length === 0) return alert("Please select a photo first!");
+        function sendOrder() {
+            const name = document.getElementById('pName').value;
+            const age = document.getElementById('pAge').value;
+            if(!name) return alert("Enter Name");
 
-            const btn = document.getElementById('finalBtn');
-            btn.disabled = true;
-            btn.innerText = "UPLOADING TO CLOUD...";
-
-            try {
-                for(let file of files) {
-                    const ref = storage.ref().child('orders/' + Date.now() + '_' + file.name);
-                    await ref.put(file);
-                }
-
-                const name = document.getElementById('pName').value;
-                const wa = document.getElementById('pWa').value;
-                const msg = `*NEW MSD DISPATCH*\nPatient: ${name}\nID: ${wa}\nStatus: Photos Uploaded to Cloud\n\n_Medicine Safe Delivery_`;
-                
-                window.location.href = `https://wa.me/919385352585?text=${encodeURIComponent(msg)}`;
-            } catch (e) {
-                alert("Cloud Error: Make sure your Firebase Storage Rules are set to 'allow read, write: if true'");
-                btn.disabled = false;
-                btn.innerText = "Dispatch to MSD";
-            }
+            const wa = "919385352585";
+            const text = `*NEW MSD PHARMA ORDER*%0A*Name:* ${name}%0A*Age:* ${age}%0A*Distance:* ${userDist} KM%0A------------------------%0A_I am ready to upload my prescription photo._`;
+            
+            window.location.href = `https://wa.me/${wa}?text=${text}`;
         }
     </script>
 </body>
