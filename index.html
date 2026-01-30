@@ -3,146 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSD | E-pharm-MSD Erode</title>
+    <title>E-PHARM-MSD | Erode Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fdfcff; color: #1e1b4b; }
-        .msd-card { background: white; border-radius: 2.5rem; border: 1px solid #f0eeff; box-shadow: 0 20px 50px rgba(79, 70, 229, 0.04); }
-        .step-hidden { display: none; }
-        .upload-zone { background: #f8f7ff; border: 2px dashed #dcd7ff; transition: 0.3s; }
-        .upload-zone:active { transform: scale(0.98); background: #f0eeff; }
-        .status-dot { width: 8px; height: 8px; background: #25D366; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fcfbff; color: #1e1b4b; }
+        .msd-card { background: white; border-radius: 2rem; border: 1px solid #f0eeff; box-shadow: 0 10px 40px rgba(0,0,0,0.02); }
+        .gradient-btn { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); }
     </style>
 </head>
-<body class="p-4 bg-[#fcfaff] min-h-screen flex flex-col items-center">
+<body class="p-4 flex flex-col items-center min-h-screen">
 
-    <header class="w-full max-w-md flex items-center justify-between py-6">
+    <header class="w-full max-w-md flex justify-between items-center py-6">
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 bg-purple-700 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-purple-100">MSD</div>
+            <div class="w-10 h-10 bg-purple-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg">M</div>
             <div>
-                <h1 class="text-xs font-black text-purple-950 uppercase tracking-tighter">E-pharm-MSD</h1>
-                <p class="text-[8px] text-purple-400 font-bold uppercase tracking-[0.3em]">Medicine Safe Delivery</p>
+                <h1 class="text-[10px] font-black text-purple-950 uppercase tracking-tight">E-PHARM-MSD</h1>
+                <p class="text-[7px] text-purple-400 font-bold uppercase tracking-widest italic">Medicine Safe Delivery</p>
             </div>
         </div>
-        <div class="text-[9px] font-black uppercase text-gray-400 border px-3 py-1 rounded-full italic">
-            <span class="status-dot"></span> Erode Hub Active
-        </div>
+        <div class="text-[8px] font-black text-gray-400 uppercase border px-3 py-1 rounded-full italic">Erode Division</div>
     </header>
 
     <main class="w-full max-w-md space-y-6">
 
-        <div id="step1" class="msd-card p-10 mt-4 text-center">
-            <h2 class="text-2xl font-black text-purple-900 mb-2 italic lowercase">Welcome back.</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-10">WhatsApp Number is your Identity</p>
+        <div id="step1" class="msd-card p-8">
+            <h2 class="text-xl font-black text-purple-900 mb-6 italic">Patient Details</h2>
             
-            <div class="space-y-4 text-left">
-                <label class="text-[9px] font-black uppercase text-purple-400 pl-4">Customer Details</label>
-                <input type="text" id="fName" placeholder="First Name *" class="w-full p-5 bg-gray-50 rounded-2xl font-bold outline-none focus:ring-2 ring-purple-100 border-none">
-                <input type="text" id="lName" placeholder="Last Name" class="w-full p-5 bg-gray-50 rounded-2xl font-bold outline-none focus:ring-2 ring-purple-100 border-none">
-                <input type="tel" id="waID" placeholder="WhatsApp Mobile *" class="w-full p-5 bg-gray-50 rounded-2xl font-bold text-center outline-none focus:ring-2 ring-purple-100 border-none">
-            </div>
-
-            <button onclick="handleLogin()" class="w-full mt-10 bg-[#25D366] text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-green-50 transition active:scale-95">
-                Login with WhatsApp
-            </button>
-        </div>
-
-        <div id="step2" class="step-hidden msd-card p-10 text-center">
-            <h2 class="text-xl font-black text-purple-950 mb-2">Hello, <span id="userName" class="text-purple-600">User</span></h2>
-            <p class="text-[10px] font-bold text-gray-400 mb-8 uppercase tracking-widest italic">Snap. Upload. Receive.</p>
-
-            <div onclick="document.getElementById('photoInput').click()" class="upload-zone w-full py-12 rounded-[3rem] cursor-pointer group">
-                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">Full Name</label>
+                    <input type="text" id="pName" placeholder="e.g. Kumar S" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
                 </div>
-                <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Tap to add prescription / Strips</p>
-                <input type="file" id="photoInput" class="hidden" multiple accept="image/*" onchange="previewImages()">
+                <div>
+                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">Age</label>
+                    <input type="text" id="pAge" placeholder="e.g. 45 Years" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black text-purple-300 uppercase ml-2">WhatsApp ID</label>
+                    <input type="tel" id="pWa" placeholder="10 Digit Mobile" class="w-full p-4 bg-gray-50 rounded-2xl font-bold border-none outline-none focus:ring-2 ring-purple-100">
+                </div>
             </div>
 
-            <div id="previewList" class="flex flex-wrap gap-2 justify-center mt-6"></div>
-
-            <button onclick="submitToPartner()" class="w-full mt-10 bg-purple-700 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-purple-50 transition active:scale-95">
-                All Done? Dispatch
+            <button onclick="showUpload()" class="w-full mt-8 gradient-btn text-white py-5 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-purple-100 transition active:scale-95">
+                Next: Add Photos
             </button>
         </div>
 
-        <div id="step3" class="step-hidden msd-card p-12 text-center">
-            <div class="w-20 h-20 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-8">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+        <div id="step2" class="hidden msd-card p-8 text-center animate-in fade-in duration-500">
+            <h2 class="text-xl font-black text-purple-900 mb-2">Prescription Snap</h2>
+            <p class="text-[9px] font-bold text-gray-400 uppercase mb-8 tracking-widest">Upload your medicine list</p>
+
+            <div onclick="document.getElementById('fileIn').click()" class="w-full py-12 border-2 border-dashed border-purple-100 rounded-[2.5rem] bg-purple-50/30 cursor-pointer">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                </div>
+                <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest">Tap to Take Photo</p>
+                <input type="file" id="fileIn" multiple class="hidden" onchange="previewFiles()">
             </div>
-            <h2 class="text-2xl font-black text-purple-950 mb-4">Request Sent!</h2>
-            <p class="text-xs font-bold text-gray-500 mb-10 leading-relaxed italic">
-                Our Delivery Partner will now contact you at <span id="finalPhone" class="text-purple-600"></span> for confirmation.
-            </p>
-            <button onclick="location.reload()" class="text-[10px] font-black text-purple-400 uppercase tracking-[0.3em] border-b-2 border-purple-200 pb-2">Back to Home</button>
+
+            <div id="preview" class="flex flex-wrap gap-2 justify-center mt-6"></div>
+
+            <button id="finalBtn" onclick="uploadAndSend()" class="w-full mt-10 bg-[#25D366] text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl shadow-green-50 transition active:scale-95">
+                Dispatch to MSD
+            </button>
         </div>
 
     </main>
 
     <script>
-        // Database Memory
-        let users = JSON.parse(localStorage.getItem('msd_db')) || {};
-        let uploadedCount = 0;
+        // YOUR FIREBASE KEYS
+        const firebaseConfig = {
+            apiKey: "AIzaSyCIGw6QEcSnLZ_iaEws8ncZNqp-0zomN8c",
+            authDomain: "msd--pharma.firebaseapp.com",
+            projectId: "msd--pharma",
+            storageBucket: "msd--pharma.firebasestorage.app",
+            messagingSenderId: "803261472190",
+            appId: "1:803261472190:web:f4d50cf3352214422b2def"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
 
-        function handleLogin() {
-            const f = document.getElementById('fName').value;
-            const p = document.getElementById('waID').value;
-            if(!f || !p) return alert("Please fill mandatory fields!");
-
-            users[p] = { f, l: document.getElementById('lName').value };
-            localStorage.setItem('msd_db', JSON.stringify(users));
-
-            document.getElementById('userName').innerText = f;
-            document.getElementById('step1').classList.add('step-hidden');
-            document.getElementById('step2').classList.remove('step-hidden');
+        function showUpload() {
+            if(!document.getElementById('pName').value || !document.getElementById('pWa').value) return alert("Please fill Name and Mobile");
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
         }
 
-        // Auto-fill Logic
-        document.getElementById('waID').oninput = function() {
-            const data = users[this.value];
-            if(data) {
-                document.getElementById('fName').value = data.f;
-                document.getElementById('lName').value = data.l;
-            }
-        };
-
-        function previewImages() {
-            const list = document.getElementById('previewList');
-            const files = document.getElementById('photoInput').files;
-            uploadedCount = files.length;
+        function previewFiles() {
+            const list = document.getElementById('preview');
+            const files = document.getElementById('fileIn').files;
             list.innerHTML = "";
             for(let f of files) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = "w-16 h-16 object-cover rounded-xl border-2 border-purple-100 shadow-sm";
-                    list.appendChild(img);
-                }
-                reader.readAsDataURL(f);
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(f);
+                img.className = "w-16 h-16 object-cover rounded-xl border-2 border-white shadow-sm";
+                list.appendChild(img);
             }
         }
 
-        function submitToPartner() {
-            if(uploadedCount === 0) return alert("Please upload medicine photos!");
-            
-            const f = document.getElementById('fName').value;
-            const p = document.getElementById('waID').value;
-            
-            // Logic: Create Secure Reference
-            const orderRef = "MSD-" + Date.now().toString().slice(-4);
-            const msg = `*NEW MSD DISPATCH*\nOrder: ${orderRef}\nCustomer: ${f}\nID: ${p}\nItems: ${uploadedCount} Photos\n\n_Medicine Safe Delivery is our Motto._`;
-            
-            const deliveryBoy = "919385352585"; 
+        async function uploadAndSend() {
+            const files = document.getElementById('fileIn').files;
+            if(files.length === 0) return alert("Please select a photo first!");
 
-            document.getElementById('finalPhone').innerText = p;
-            document.getElementById('step2').classList.add('step-hidden');
-            document.getElementById('step3').classList.remove('step-hidden');
+            const btn = document.getElementById('finalBtn');
+            btn.disabled = true;
+            btn.innerText = "UPLOADING TO CLOUD...";
 
-            setTimeout(() => {
-                window.location.href = `https://wa.me/${deliveryBoy}?text=${encodeURIComponent(msg)}`;
-            }, 1200);
+            try {
+                for(let file of files) {
+                    const ref = storage.ref().child('orders/' + Date.now() + '_' + file.name);
+                    await ref.put(file);
+                }
+
+                const name = document.getElementById('pName').value;
+                const wa = document.getElementById('pWa').value;
+                const msg = `*NEW MSD DISPATCH*\nPatient: ${name}\nID: ${wa}\nStatus: Photos Uploaded to Cloud\n\n_Medicine Safe Delivery_`;
+                
+                window.location.href = `https://wa.me/919385352585?text=${encodeURIComponent(msg)}`;
+            } catch (e) {
+                alert("Cloud Error: Make sure your Firebase Storage Rules are set to 'allow read, write: if true'");
+                btn.disabled = false;
+                btn.innerText = "Dispatch to MSD";
+            }
         }
     </script>
 </body>
