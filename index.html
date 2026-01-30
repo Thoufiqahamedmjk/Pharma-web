@@ -2,121 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSD PRO | Pharma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>MSD PHARMA | Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
-        .card { background: white; border-radius: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .btn-pay { background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; }
-        #dispatchBtn { display: none; background: #0f172a; color: white; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f1f5f9; color: #0f172a; }
+        .card { background: white; border-radius: 2.5rem; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+        .input-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1rem; width: 100%; outline: none; font-weight: 700; }
+        #finalBtn { display: none; background: #0f172a; }
+        #zoomOverlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
+        #zoomImg { max-width:95%; max-height:95%; transition: transform 0.3s ease; cursor: zoom-in; }
     </style>
 </head>
-<body class="min-h-screen pt-20 px-6">
+<body class="min-h-screen pt-20 px-6 pb-24">
 
-    <nav class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md p-4 flex justify-between items-center z-50 border-b">
-        <span class="font-black text-slate-900 uppercase">MSD <span class="text-indigo-600 font-medium">Pharma</span></span>
-        <div id="activeTag" class="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full uppercase">...</div>
+    <div id="zoomOverlay" onclick="this.style.display='none'">
+        <img id="zoomImg" src="" alt="Zoom" onclick="event.stopPropagation(); toggleZoom(this)">
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md p-5 border-b z-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">M</div>
+            <span class="font-extrabold tracking-tighter uppercase text-lg">MSD <span class="text-indigo-600 text-sm">PHARMA</span></span>
+        </div>
+        <button onclick="document.getElementById('boyMode').scrollIntoView({behavior:'smooth'})" class="text-[9px] font-black bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full uppercase italic">Boy Mode</button>
     </nav>
 
-    <main class="max-w-md mx-auto space-y-6">
-        <div class="card p-8 space-y-5">
-            <h2 class="text-xl font-black text-slate-800">New Order</h2>
-            
-            <input type="text" id="pName" oninput="check()" placeholder="Patient Name" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold">
-            <input type="tel" id="pPhone" oninput="check()" maxlength="10" placeholder="WhatsApp Number" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold">
-            
-            <div onclick="document.getElementById('files').click()" class="border-2 border-dashed border-slate-200 rounded-2xl py-6 bg-slate-50 text-center cursor-pointer">
-                <span id="fileStatus" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Attach Prescription</span>
-                <input type="file" id="files" multiple class="hidden" onchange="check()">
+    <main class="max-w-md mx-auto space-y-8">
+        <div class="card p-8 space-y-6">
+            <h2 class="text-2xl font-black tracking-tight">Order Booking</h2>
+            <div class="space-y-4">
+                <input type="text" id="custName" oninput="val()" placeholder="Patient Name" class="input-box">
+                <input type="tel" id="custPhone" oninput="val()" maxlength="10" placeholder="Patient WhatsApp" class="input-box">
+                <div onclick="document.getElementById('fIn').click()" class="border-2 border-dashed border-slate-200 rounded-2xl py-8 bg-slate-50 text-center cursor-pointer">
+                    <p id="fLb" class="text-[10px] font-black text-slate-400 uppercase tracking-widest">1. Attach Prescription</p>
+                    <input type="file" id="fIn" multiple class="hidden" onchange="val()">
+                </div>
             </div>
 
-            <div id="payBox" class="hidden space-y-4">
-                <div class="p-6 bg-indigo-50 rounded-2xl text-center border border-indigo-100">
-                    <p class="text-[10px] font-black text-indigo-400 uppercase mb-1">Booking Advance</p>
-                    <p class="text-2xl font-black text-slate-900 mb-4">₹50</p>
-                    <a id="payLink" href="#" class="btn-pay block w-full py-4 rounded-xl font-black text-xs uppercase">Pay via UPI</a>
+            <div id="payArea" class="hidden space-y-4 pt-4 border-t">
+                <div class="p-6 bg-indigo-50 rounded-[2rem] text-center border border-indigo-100">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase mb-3 text-center">2. Scan & Pay ₹50</p>
+                    <img src="qr.jpg" onclick="openZ(this.src)" class="w-40 h-40 mx-auto rounded-xl shadow-md cursor-zoom-in mb-2">
+                    <p class="text-[9px] text-slate-400 italic font-bold">Tap to Zoom QR</p>
+                </div>
+                <div onclick="document.getElementById('pIn').click()" class="border-2 border-dashed border-indigo-200 rounded-xl py-4 bg-white text-center cursor-pointer">
+                    <p id="pLb" class="text-[10px] font-black text-indigo-500 uppercase font-bold">3. Upload Screenshot</p>
+                    <input type="file" id="pIn" class="hidden" onchange="checkP()">
+                </div>
+                <button id="finalBtn" onclick="hdl()" class="w-full py-5 text-white rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl transition-all">Confirm Order</button>
+            </div>
+        </div>
+
+        <hr class="border-slate-300">
+
+        <div id="boyMode" class="card p-8 space-y-6 border-t-4 border-indigo-600">
+            <h2 class="text-xl font-black tracking-tight uppercase">Boy Dispatch Console</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Medicine Bill (₹)</label>
+                    <input type="number" id="mPrice" oninput="calc()" placeholder="0.00" class="input-box">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase ml-1">Distance (km)</label>
+                    <input type="number" id="dist" oninput="calc()" placeholder="e.g. 5" class="input-box">
                 </div>
 
-                <div onclick="document.getElementById('proof').click()" class="border-2 border-indigo-200 border-dashed rounded-xl py-4 bg-white text-center cursor-pointer">
-                    <span id="proofStatus" class="text-[10px] font-black text-indigo-500 uppercase">2. Upload Screenshot</span>
-                    <input type="file" id="proof" class="hidden" onchange="showDispatch()">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase mb-2">
+                        <span>Delivery Fee</span>
+                        <span id="delFee">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-black text-slate-900 border-t pt-2">
+                        <span>Total Bill</span>
+                        <span id="totalBill" class="text-indigo-600">₹0</span>
+                    </div>
                 </div>
-
-                <button id="dispatchBtn" onclick="sendToWhatsApp()" class="w-full py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">Confirm & Dispatch</button>
+                
+                <button onclick="sendBill()" class="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-emerald-500/20">
+                    Send Bill to Customer
+                </button>
             </div>
         </div>
     </main>
 
     <script>
-        const CLOUD = "du14a1qmh";
-        const PRESET = "msd_live";
-        let WA = "919385352585"; 
-        let UPI = "9385352585@ybl";
-        let NAME = "Admin";
+        const WA = "919385352585"; const CLD = "du14a1qmh"; const PST = "msd_live";
 
-        // --- AUTO-CALL SYNC ---
-        (function sync() {
-            const p = new URLSearchParams(window.location.search);
-            if(p.get('setPartner') && p.get('setUpi')) {
-                localStorage.setItem('wa', p.get('setPartner'));
-                localStorage.setItem('upi', p.get('setUpi'));
-                localStorage.setItem('name', p.get('setName'));
-                window.history.replaceState({},'',window.location.pathname);
-            }
-            WA = localStorage.getItem('wa') || WA;
-            UPI = localStorage.getItem('upi') || UPI;
-            NAME = localStorage.getItem('name') || NAME;
-            
-            document.getElementById('activeTag').innerText = "LIVE: " + NAME;
-            document.getElementById('payLink').href = `upi://pay?pa=${UPI}&pn=MSD_Pharma&am=50&cu=INR`;
-        })();
+        function openZ(s){ document.getElementById('zoomImg').src=s; document.getElementById('zoomOverlay').style.display='flex'; }
+        function toggleZoom(i){ i.style.transform=i.style.transform==='scale(2)'?'scale(1)':'scale(2)'; }
 
-        function check() {
-            const n = document.getElementById('pName').value;
-            const p = document.getElementById('pPhone').value;
-            const f = document.getElementById('files').files;
-            if(f.length > 0) document.getElementById('fileStatus').innerText = `✅ ${f.length} Files Selected`;
-            if(n.length > 2 && p.length === 10 && f.length > 0) document.getElementById('payBox').classList.remove('hidden');
+        function val(){
+            const n=document.getElementById('custName').value, p=document.getElementById('custPhone').value, f=document.getElementById('fIn').files;
+            if(f.length>0) document.getElementById('fLb').innerText=`✅ ${f.length} Ready`;
+            if(n.length>2 && p.length===10 && f.length>0) document.getElementById('payArea').classList.remove('hidden');
         }
 
-        function showDispatch() {
-            if(document.getElementById('proof').files.length > 0) {
-                document.getElementById('proofStatus').innerText = "✅ Screenshot Ready";
-                document.getElementById('dispatchBtn').style.display = 'block';
-            }
-        }
+        function checkP(){ if(document.getElementById('pIn').files.length>0){ document.getElementById('pLb').innerText="✅ Screenshot Added"; document.getElementById('finalBtn').style.display='block'; }}
 
-        async function sendToWhatsApp() {
-            const btn = document.getElementById('dispatchBtn');
-            btn.innerText = "UPLOADING..."; btn.disabled = true;
-
+        async function hdl(){
+            const b=document.getElementById('finalBtn'); b.innerText="UPLOADING..."; b.disabled=true;
             try {
-                const presc = [...document.getElementById('files').files];
-                const proof = document.getElementById('proof').files[0];
-                let links = [];
-
-                for(let f of [proof, ...presc]) {
-                    const fd = new FormData();
-                    fd.append('file', f); fd.append('upload_preset', PRESET);
-                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {method:'POST', body:fd});
-                    const d = await res.json(); links.push(d.secure_url);
+                const pr=[...document.getElementById('fIn').files], pf=document.getElementById('pIn').files[0]; let u=[];
+                for(let f of [pf,...pr]){
+                    const fd=new FormData(); fd.append('file',f); fd.append('upload_preset',PST);
+                    const r=await fetch(`https://api.cloudinary.com/v1_1/${CLD}/image/upload`,{method:'POST',body:fd});
+                    const d=await r.json(); u.push(d.secure_url);
                 }
+                let m=`*NEW DISPATCH*%0A*Name:* ${document.getElementById('custName').value}%0A*Contact:* ${document.getElementById('custPhone').value}%0A%0A*Proof:* ${u[0]}%0A*Prescriptions:*%0A`;
+                u.slice(1).forEach((l,i)=>m+=`Img${i+1}: ${l}%0A`);
+                window.location.href=`https://wa.me/${WA}?text=${m}`;
+            } catch(e){ alert("Retry Upload"); b.innerText="Confirm Order"; b.disabled=false; }
+        }
 
-                // CLEAN WHATSAPP MESSAGE (No long URL)
-                let msg = `*NEW ORDER - MSD PHARMA*%0A`;
-                msg += `*Patient:* ${document.getElementById('pName').value}%0A`;
-                msg += `*Contact:* ${document.getElementById('pPhone').value}%0A%0A`;
-                msg += `*Payment Proof:*%0A${links[0]}%0A%0A`;
-                msg += `*Prescriptions:*%0A`;
-                links.slice(1).forEach((l, i) => msg += `File ${i+1}: ${l}%0A`);
+        // PRICE CALCULATOR LOGIC
+        function calc() {
+            const mP = parseFloat(document.getElementById('mPrice').value) || 0;
+            const d = parseFloat(document.getElementById('dist').value) || 0;
+            let fee = 0;
 
-                window.location.href = `https://wa.me/${WA}?text=${msg}`;
-            } catch (e) {
-                alert("Error! Check internet.");
-                btn.innerText = "Confirm & Dispatch"; btn.disabled = false;
+            if (d > 0) {
+                fee = 25; // Base Charge
+                if (d > 3) {
+                    fee += (d - 3) * 10; // Extra km Charge
+                }
             }
+
+            document.getElementById('delFee').innerText = "₹" + fee;
+            document.getElementById('totalBill').innerText = "₹" + (mP + fee);
+        }
+
+        function sendBill() {
+            const bill = document.getElementById('totalBill').innerText;
+            const phone = document.getElementById('custPhone').value;
+            const name = document.getElementById('custName').value || "Customer";
+            if(!phone || bill === "₹0") return alert("Enter Customer Phone & Bill Details");
+
+            const text = `*MSD PHARMA - DELIVERY READY*%0A%0AHello *${name}*,%0A%0A*Medicine Total:* ${document.getElementById('mPrice').value}%0A*Delivery Fee:* ${document.getElementById('delFee').innerText}%0A---%0A*GRAND TOTAL: ${bill}*%0A%0A✅ Our boy is arriving with your medicines. Please keep the cash/UPI ready.`;
+            window.location.href = `https://wa.me/91${phone}?text=${text}`;
         }
     </script>
 </body>
